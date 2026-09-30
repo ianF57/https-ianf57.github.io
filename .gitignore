@@ -1,0 +1,16 @@
+# OS clutter
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# editor state
+.vscode/
+.idea/
+*.swp
+
+# the CV as delivered. The site links to assets/Ian_Faasen_CV.pdf, which is the
+# copy that ships; a second one in the repo root is noise and would be public.
+Ian_Faasen_CV (*).pdf
+
+# archives
+*.zip

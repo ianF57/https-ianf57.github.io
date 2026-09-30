@@ -1,0 +1,1338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ian Faasen · R&amp;D Data Analyst &amp; Machine Learning</title>
+<meta name="description" content="Ian Faasen, Computer Science graduate and R&amp;D Data Analyst. Production BI dashboards, machine learning systems and automated reporting. Centurion, South Africa.">
+<meta name="theme-color" content="#1A1614">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ian Faasen · R&amp;D Data Analyst &amp; Machine Learning">
+<meta property="og:description" content="Production BI dashboards, machine learning systems and automated reporting. The portfolio, rendered as scripture.">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 190'%3E%3Crect width='240' height='190' fill='%231A1614'/%3E%3Cpath d='M38 120 L50 54 L68 112 Z M74 111 L88 30 L106 106 Z M110 104 L122 12 L142 104 Z M148 105 L164 32 L182 112 Z M188 113 L204 56 L216 121 Z' fill='%23D0402C'/%3E%3Cpath d='M26 124 Q120 100 214 124 L214 158 Q120 178 26 158 Z' fill='%23D0402C'/%3E%3Cellipse cx='120' cy='138' rx='30' ry='20' fill='%23EFE7D3'/%3E%3Ccircle cx='120' cy='138' r='11' fill='%231A1614'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@300;400;500;600;700;800;900&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/style.css">
+
+<!-- The deck needs JavaScript to turn. Without it, lay both faces out flat
+     so the work is still readable. -->
+<noscript>
+  <style>
+    .card { aspect-ratio: auto; }
+    .card__inner,
+    .card.is-flipped .card__inner { transform: none; }
+    .card__face { position: static; backface-visibility: visible; }
+    .card__face--back { transform: none; }
+    .card__face--front { padding-bottom: 1rem; }
+    .card__turn,
+    .card__turn-back,
+    .card__hint { display: none; }
+    .reveal { opacity: 1; transform: none; }
+    .deck__bar { display: none; }
+  </style>
+</noscript>
+</head>
+
+<body>
+
+<a class="skip" href="#deck">Skip to the works</a>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ILLUSTRATION SPRITE: every mark on this page is drawn here.
+     ══════════════════════════════════════════════════════════════ -->
+<svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+
+    <!-- ── The Red Crown (static, for nav and footer) ── -->
+    <symbol id="i-crown" viewBox="0 0 240 190">
+      <g stroke="currentColor" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+        <path fill="#D0402C" d="M38 120 L50 54 L68 112 Z"/>
+        <path fill="#D0402C" d="M74 111 L88 30 L106 106 Z"/>
+        <path fill="#D0402C" d="M110 104 L122 12 L142 104 Z"/>
+        <path fill="#D0402C" d="M148 105 L164 32 L182 112 Z"/>
+        <path fill="#D0402C" d="M188 113 L204 56 L216 121 Z"/>
+        <path fill="#D0402C" d="M26 124 Q120 100 214 124 L214 158 Q120 178 26 158 Z"/>
+      </g>
+      <path d="M36 148 Q120 168 204 148" fill="none" stroke="#E3A93C" stroke-width="6" stroke-linecap="round"/>
+      <ellipse cx="120" cy="138" rx="30" ry="20" fill="#EFE7D3" stroke="#1A1614" stroke-width="6"/>
+      <circle cx="120" cy="138" r="11" fill="#1A1614"/>
+      <circle cx="126" cy="132" r="3.5" fill="#EFE7D3"/>
+    </symbol>
+
+    <!-- ── A follower ── -->
+    <symbol id="i-follower" viewBox="0 0 100 110">
+      <g stroke="#1A1614" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M32 26 L26 8 L44 20 Z" fill="currentColor"/>
+        <path d="M68 26 L74 8 L56 20 Z" fill="currentColor"/>
+        <ellipse cx="24" cy="94" rx="12" ry="8" fill="currentColor"/>
+        <ellipse cx="76" cy="94" rx="12" ry="8" fill="currentColor"/>
+        <path d="M50 16 C71 16 85 34 85 56 C85 80 71 96 50 96 C29 96 15 80 15 56 C15 34 29 16 50 16 Z" fill="currentColor"/>
+      </g>
+      <ellipse cx="38" cy="52" rx="11" ry="12.5" fill="#EFE7D3" stroke="#1A1614" stroke-width="4"/>
+      <ellipse cx="62" cy="52" rx="11" ry="12.5" fill="#EFE7D3" stroke="#1A1614" stroke-width="4"/>
+      <circle cx="39" cy="54" r="5" fill="#1A1614"/>
+      <circle cx="63" cy="54" r="5" fill="#1A1614"/>
+      <circle cx="41" cy="51" r="1.8" fill="#EFE7D3"/>
+      <circle cx="65" cy="51" r="1.8" fill="#EFE7D3"/>
+      <path d="M43 76 Q50 82 57 76" fill="none" stroke="#1A1614" stroke-width="4" stroke-linecap="round"/>
+      <path d="M42 30 L50 22 L58 30 L50 38 Z" fill="#D0402C" stroke="#1A1614" stroke-width="3.5" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- ── Ritual circle ── -->
+    <symbol id="i-pentagram" viewBox="0 0 200 200">
+      <g fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="100" cy="100" r="96"/>
+        <circle cx="100" cy="100" r="88"/>
+        <circle cx="100" cy="100" r="58"/>
+      </g>
+      <path class="penta__star" d="M100 22 L145.8 163.1 L25.8 75.9 L174.2 75.9 L54.2 163.1 Z"
+            fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+      <g class="penta__ticks" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M100 0 V12"/><path d="M100 188 V200"/>
+        <path d="M0 100 H12"/><path d="M188 100 H200"/>
+        <path d="M29 29 L37 37"/><path d="M163 163 L171 171"/>
+        <path d="M171 29 L163 37"/><path d="M37 163 L29 171"/>
+      </g>
+      <g fill="currentColor">
+        <circle cx="100" cy="22" r="5"/><circle cx="145.8" cy="163.1" r="5"/>
+        <circle cx="25.8" cy="75.9" r="5"/><circle cx="174.2" cy="75.9" r="5"/>
+        <circle cx="54.2" cy="163.1" r="5"/>
+      </g>
+    </symbol>
+
+    <!-- ── Dagger (list marker) ── -->
+    <symbol id="i-dagger" viewBox="0 0 24 24">
+      <path d="M12 2 L15 9 L12 22 L9 9 Z" fill="currentColor" stroke="#1A1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M6 9 H18" stroke="#1A1614" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="12" cy="9" r="2.4" fill="#E3A93C" stroke="#1A1614" stroke-width="1.6"/>
+    </symbol>
+
+    <!-- ── Coin ── -->
+    <symbol id="i-coin" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="#E3A93C" stroke="#1A1614" stroke-width="2"/>
+      <circle cx="12" cy="12" r="6" fill="none" stroke="#1A1614" stroke-width="1.6"/>
+      <path d="M12 6 V18 M8 9 H16 M8 15 H16" stroke="#1A1614" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- ══════════ TAROT ARCANA ══════════ -->
+
+    <!-- I · The Magician: Hermes -->
+    <symbol id="t-magician" viewBox="0 0 120 120">
+      <g stroke="#1A1614" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M60 96 V18" stroke-width="6"/>
+        <circle cx="60" cy="58" r="28" fill="#D0402C"/>
+        <path d="M32 52 C18 44 12 32 14 20 C26 22 38 32 42 46 Z" fill="#EFE7D3"/>
+        <path d="M88 52 C102 44 108 32 106 20 C94 22 82 32 78 46 Z" fill="#EFE7D3"/>
+        <path d="M60 44 L60 72 M48 58 H72" stroke="#EFE7D3" stroke-width="5"/>
+      </g>
+      <path d="M18 104 L42 76 L58 90 L102 34" fill="none" stroke="#E3A93C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M88 32 L104 32 L104 48" fill="none" stroke="#E3A93C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- III · The Empress: ReputeIQ -->
+    <symbol id="t-empress" viewBox="0 0 120 120">
+      <g stroke="#1A1614" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M30 52 H90 L82 84 Q60 94 38 84 Z" fill="#D0402C"/>
+        <path d="M60 88 V102" stroke-width="6"/>
+        <path d="M40 106 H80" stroke-width="6"/>
+        <path d="M16 60 Q22 44 34 38" fill="none" stroke="#5C6B3F" stroke-width="5"/>
+        <path d="M104 60 Q98 44 86 38" fill="none" stroke="#5C6B3F" stroke-width="5"/>
+        <path d="M18 46 L24 56 M22 40 L26 52" stroke="#5C6B3F" stroke-width="4"/>
+        <path d="M102 46 L96 56 M98 40 L94 52" stroke="#5C6B3F" stroke-width="4"/>
+        <path d="M60 10 L66 26 L82 32 L66 38 L60 54 L54 38 L38 32 L54 26 Z" fill="#E3A93C"/>
+      </g>
+      <circle cx="60" cy="30" r="4" fill="#1A1614"/>
+    </symbol>
+
+    <!-- X · Wheel of Fortune: TonkaT -->
+    <symbol id="t-wheel" viewBox="0 0 120 120">
+      <g stroke="#1A1614" stroke-width="4.5" stroke-linejoin="round">
+        <circle cx="60" cy="62" r="42" fill="#EFE7D3"/>
+        <circle cx="60" cy="62" r="32" fill="none"/>
+        <circle cx="60" cy="62" r="13" fill="#D0402C"/>
+      </g>
+      <g stroke="#1A1614" stroke-width="4" stroke-linecap="round">
+        <path d="M60 20 V49"/><path d="M60 75 V104"/>
+        <path d="M18 62 H47"/><path d="M73 62 H102"/>
+        <path d="M30 32 L51 53"/><path d="M69 71 L90 92"/>
+        <path d="M90 32 L69 53"/><path d="M51 71 L30 92"/>
+      </g>
+      <path d="M60 4 L70 18 L50 18 Z" fill="#E3A93C" stroke="#1A1614" stroke-width="4" stroke-linejoin="round"/>
+      <circle cx="60" cy="62" r="5" fill="#E3A93C"/>
+    </symbol>
+
+    <!-- XVII · The Star: KITSUNE -->
+    <symbol id="t-star" viewBox="0 0 120 120">
+      <path d="M60 6 L70 50 L114 60 L70 70 L60 114 L50 70 L6 60 L50 50 Z" fill="#E3A93C" stroke="#1A1614" stroke-width="4" stroke-linejoin="round"/>
+      <g stroke="#1A1614" stroke-width="4.5" stroke-linejoin="round">
+        <path d="M26 74 L34 46 L50 60 L60 52 L70 60 L86 46 L94 74 Q60 92 26 74 Z" fill="#EFE7D3"/>
+        <path d="M40 66 Q48 60 54 66" fill="none" stroke-width="4"/>
+        <path d="M80 66 Q72 60 66 66" fill="none" stroke-width="4"/>
+      </g>
+      <path d="M34 46 L40 54 M86 46 L80 54" stroke="#D0402C" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="60" cy="78" r="5" fill="#D0402C" stroke="#1A1614" stroke-width="3"/>
+    </symbol>
+
+    <!-- XX · Judgement: vision, language, voice -->
+    <symbol id="t-judgement" viewBox="0 0 120 120">
+      <g stroke="#1A1614" stroke-width="4.5" stroke-linejoin="round">
+        <path d="M4 56 Q60 8 116 56 Q60 104 4 56 Z" fill="#EFE7D3"/>
+        <circle cx="60" cy="56" r="20" fill="#D0402C"/>
+        <circle cx="60" cy="56" r="8" fill="#1A1614"/>
+      </g>
+      <g stroke="#E3A93C" stroke-width="5" stroke-linecap="round">
+        <path d="M60 2 V14"/><path d="M20 18 L28 28"/><path d="M100 18 L92 28"/>
+      </g>
+      <g stroke="#1A1614" stroke-width="3" stroke-linecap="round">
+        <path d="M24 96 V114"/><path d="M34 96 V114"/><path d="M46 96 V110"/>
+        <path d="M56 96 V114"/><path d="M64 96 V114"/><path d="M76 96 V108"/>
+        <path d="M86 96 V114"/><path d="M96 96 V114"/>
+      </g>
+      <circle cx="66" cy="50" r="4" fill="#EFE7D3"/>
+    </symbol>
+
+    <!-- XXI · The World: GABM -->
+    <symbol id="t-world" viewBox="0 0 120 120">
+      <circle cx="60" cy="56" r="38" fill="#5E4280" stroke="#1A1614" stroke-width="4.5"/>
+      <g fill="none" stroke="#EFE7D3" stroke-width="3">
+        <ellipse cx="60" cy="56" rx="16" ry="38"/>
+        <path d="M22 56 H98"/>
+        <path d="M30 32 Q60 44 90 32"/>
+        <path d="M30 80 Q60 68 90 80"/>
+      </g>
+      <g stroke="#E3A93C" stroke-width="3.5" stroke-linecap="round">
+        <path d="M40 44 L60 30 L80 48 L58 68 Z" fill="none"/>
+      </g>
+      <g fill="#E3A93C" stroke="#1A1614" stroke-width="3">
+        <circle cx="40" cy="44" r="5"/><circle cx="60" cy="30" r="5"/>
+        <circle cx="80" cy="48" r="5"/><circle cx="58" cy="68" r="5"/>
+      </g>
+      <path d="M18 100 Q60 116 102 100" fill="none" stroke="#5C6B3F" stroke-width="6" stroke-linecap="round"/>
+      <g fill="#5C6B3F" stroke="#1A1614" stroke-width="2.5">
+        <ellipse cx="34" cy="104" rx="7" ry="4" transform="rotate(-20 34 104)"/>
+        <ellipse cx="60" cy="110" rx="7" ry="4"/>
+        <ellipse cx="86" cy="104" rx="7" ry="4" transform="rotate(20 86 104)"/>
+      </g>
+    </symbol>
+
+    <!-- Chapter sigils for the spine rail -->
+    <symbol id="s-record" viewBox="0 0 32 32">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round">
+        <path d="M6 4 H20 L26 10 V28 H6 Z"/><path d="M20 4 V10 H26"/>
+        <path d="M11 16 H21 M11 21 H21"/>
+      </g>
+    </symbol>
+    <symbol id="s-deck" viewBox="0 0 32 32">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round">
+        <rect x="4" y="8" width="15" height="20" rx="2"/>
+        <path d="M22 6 L28 26"/>
+      </g>
+    </symbol>
+    <symbol id="s-doctrine" viewBox="0 0 32 32">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round">
+        <path d="M16 3 L28 12 V26 Q16 32 4 26 V12 Z"/><path d="M11 16 H21 M16 11 V21"/>
+      </g>
+    </symbol>
+    <symbol id="s-faithful" viewBox="0 0 32 32">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round">
+        <circle cx="16" cy="12" r="6"/><path d="M5 29 Q16 19 27 29"/>
+      </g>
+    </symbol>
+    <symbol id="s-trials" viewBox="0 0 32 32">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 4 V25"/><path d="M10 26 H22"/>
+        <path d="M6 9 H26"/>
+        <path d="M6 9 L2.5 17 H9.5 Z"/><path d="M26 9 L22.5 17 H29.5 Z"/>
+      </g>
+    </symbol>
+    <symbol id="s-rite" viewBox="0 0 32 32">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round">
+        <path d="M16 3 L19 12 L28 15 L19 18 L16 27 L13 18 L4 15 L13 12 Z"/>
+      </g>
+    </symbol>
+
+  </defs>
+</svg>
+
+
+<!-- ══════════════════════════════ NAV ══════════════════════════════ -->
+<header class="nav" id="nav">
+  <div class="nav__progress"><span id="navProgress"></span></div>
+
+  <a class="nav__brand" href="#top">
+    <svg class="nav__crown" viewBox="0 0 240 190" aria-hidden="true"><use href="#i-crown"/></svg>
+    <span class="nav__name">Ian Faasen</span>
+  </a>
+
+  <nav class="nav__links" aria-label="Chapters">
+    <a href="#record"><b>I</b><span>Record</span></a>
+    <a href="#deck"><b>II</b><span>Deck</span></a>
+    <a href="#doctrines"><b>III</b><span>Doctrines</span></a>
+    <a href="#faithful"><b>IV</b><span>Faithful</span></a>
+    <a href="#trials"><b>V</b><span>Trials</span></a>
+    <a href="#rite"><b>VI</b><span>Rite</span></a>
+  </nav>
+
+  <div class="nav__tools">
+    <button class="tog" id="soundTog" type="button" aria-pressed="false" title="Toggle ritual sound">
+      <span class="tog__on">♪</span><span class="tog__off">♪</span>
+      <span class="sr">Ritual sound</span>
+    </button>
+    <button class="tog" id="cultTog" type="button" aria-pressed="true" title="Toggle the followers">
+      <svg viewBox="0 0 100 110" aria-hidden="true"><use href="#i-follower"/></svg>
+      <span class="sr">Wandering followers</span>
+    </button>
+    <a class="btn btn--ghost nav__cv" href="assets/Ian_Faasen_CV.pdf" target="_blank" rel="noopener">C.V.</a>
+  </div>
+</header>
+
+<!-- Chapter rail (desktop) -->
+<nav class="rail" aria-hidden="true">
+  <span class="rail__line"><i id="railFill"></i></span>
+  <a href="#record" data-rail="record"><svg viewBox="0 0 32 32"><use href="#s-record"/></svg></a>
+  <a href="#deck" data-rail="deck"><svg viewBox="0 0 32 32"><use href="#s-deck"/></svg></a>
+  <a href="#doctrines" data-rail="doctrines"><svg viewBox="0 0 32 32"><use href="#s-doctrine"/></svg></a>
+  <a href="#faithful" data-rail="faithful"><svg viewBox="0 0 32 32"><use href="#s-faithful"/></svg></a>
+  <a href="#trials" data-rail="trials"><svg viewBox="0 0 32 32"><use href="#s-trials"/></svg></a>
+  <a href="#rite" data-rail="rite"><svg viewBox="0 0 32 32"><use href="#s-rite"/></svg></a>
+</nav>
+
+
+<main id="top">
+
+<!-- ═══════════════════════════ PROLOGUE ═══════════════════════════ -->
+<section class="hero">
+  <div class="hero__rite" aria-hidden="true">
+    <svg viewBox="0 0 200 200" class="hero__penta"><use href="#i-pentagram"/></svg>
+  </div>
+  <div class="hero__embers" id="embers" aria-hidden="true"></div>
+
+  <div class="wrap hero__wrap">
+
+    <p class="eyebrow">
+      <span class="eyebrow__rule"></span>
+      The Church of the Analysed
+      <span class="eyebrow__rule"></span>
+    </p>
+
+    <!-- The Red Crown: its eye follows the cursor -->
+    <div class="crownwrap">
+      <svg class="crown" viewBox="0 0 240 190" role="img" aria-label="The Red Crown, its eye watching">
+        <g class="crown__spikes" stroke="currentColor" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M38 120 L50 54 L68 112 Z"/>
+          <path d="M74 111 L88 30 L106 106 Z"/>
+          <path d="M110 104 L122 12 L142 104 Z"/>
+          <path d="M148 105 L164 32 L182 112 Z"/>
+          <path d="M188 113 L204 56 L216 121 Z"/>
+        </g>
+        <g stroke="currentColor" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+          <path class="crown__band" d="M26 124 Q120 100 214 124 L214 158 Q120 178 26 158 Z"/>
+        </g>
+        <path class="crown__trim" d="M36 148 Q120 168 204 148" fill="none" stroke="#E3A93C" stroke-width="6" stroke-linecap="round"/>
+        <g class="crown__eye">
+          <ellipse class="crown__sclera" cx="120" cy="138" rx="30" ry="20" stroke="currentColor" stroke-width="6"/>
+          <g class="crown__pupil" id="pupil">
+            <circle cx="120" cy="138" r="11.5" fill="#1A1614"/>
+            <circle cx="126" cy="132" r="3.5" fill="#EFE7D3"/>
+          </g>
+        </g>
+      </svg>
+      <span class="crownwrap__halo" aria-hidden="true"></span>
+    </div>
+
+    <h1 class="hero__name">
+      <span class="hero__name-l1">Ian</span>
+      <span class="hero__name-l2">Faasen</span>
+    </h1>
+
+    <p class="hero__role">
+      <span>R&amp;D Data Analyst</span><i>·</i><span>Machine Learning</span><i>·</i><span>Centurion, South Africa</span>
+    </p>
+
+    <p class="hero__blurb">
+      I build the dashboards a company runs on, and the machine learning that quietly does
+      the reading: production VLM and NLP systems, quant backends that never
+      sleep, and a city simulated from survey data.
+      <span class="hero__blurb-close">Presented here as they deserve to be: <em>as scripture.</em></span>
+    </p>
+
+    <div class="hero__cta">
+      <a class="btn btn--blood" href="#deck" data-burst>
+        <svg viewBox="0 0 24 24" class="btn__ico" aria-hidden="true"><use href="#i-dagger"/></svg>
+        Begin the Sermon
+      </a>
+      <a class="btn btn--ghost" href="assets/Ian_Faasen_CV.pdf" target="_blank" rel="noopener">
+        Read the Scripture
+      </a>
+    </div>
+
+    <dl class="plates">
+      <div class="plate">
+        <dt class="plate__n" data-count="5">0</dt>
+        <dd class="plate__l">Reports<br>automated</dd>
+      </div>
+      <div class="plate">
+        <dt class="plate__n" data-count="3">0</dt>
+        <dd class="plate__l">ML systems<br>in production</dd>
+      </div>
+      <div class="plate">
+        <dt class="plate__n" data-count="3">0</dt>
+        <dd class="plate__l">Dashboards<br>shipped</dd>
+      </div>
+      <div class="plate">
+        <dt class="plate__n" data-count="6">0</dt>
+        <dd class="plate__l">Works in<br>the deck</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="scrollcue" aria-hidden="true">
+    <span class="scrollcue__line"></span>
+  </div>
+</section>
+
+
+<!-- ═══════════════ CHAPTER I · THE PROFANE RECORD ═══════════════ -->
+<section class="ch ch--ink" id="record" data-chapter="record">
+  <div class="wrap">
+
+    <header class="chtitle reveal">
+      <span class="chtitle__num">Chapter I</span>
+      <h2 class="chtitle__h">The Profane Record</h2>
+      <p class="chtitle__sub">Where the devotion was actually spent. Ledgers, dashboards and models that
+        other people depend on to be correct.</p>
+    </header>
+
+    <ol class="ledger">
+
+      <li class="entry reveal">
+        <div class="entry__when">
+          <span class="entry__dot"></span>
+          <time>Jan 2026 – Present</time>
+        </div>
+        <div class="entry__body">
+          <div class="entry__head">
+            <h3>R&amp;D Data Analyst</h3>
+            <p class="entry__org">Vehicle telematics firm <span>· Business Intelligence &amp; Automation, R&amp;D</span></p>
+          </div>
+          <p class="entry__lede">
+            Selected into the Business Intelligence &amp; Automation team in Research &amp;
+            Development, where I own the operational reporting that the business steers by,
+            and the machine learning that removes the manual reading of it.
+          </p>
+
+          <div class="entry__grid">
+            <div class="entry__col">
+              <h4 class="minih">Reporting, automated</h4>
+              <ul class="rites">
+                <li>Automated and deployed five business-critical operational reports (<b>Daily Stock</b>, <b>Global Operations</b>, <b>Churn &amp; Retention</b>, <b>Hardware Health</b> and <b>Product Adoption</b>), cutting manual reporting time while holding accuracy.</li>
+                <li>Designed, built and maintain production <b>Grafana dashboards</b> on Python and SQL for stock, delivery and operational performance monitoring.</li>
+                <li>Built the <b>Stock Delivery Dashboard</b> from the ground up, giving end-to-end visibility into stock movement and delivery operations.</li>
+                <li>Delivered the <b>Delivery Product Dashboard</b>, tracking commissions, operational activity and key performance indicators.</li>
+                <li>Designed and deployed the <b>Mining Division Dashboard</b>, enabling data-driven performance monitoring and business insight.</li>
+              </ul>
+            </div>
+            <div class="entry__col">
+              <h4 class="minih">Machines, in production</h4>
+              <ul class="rites">
+                <li>Built a <b>Vision-Language Model</b> that extracts VIN numbers from vehicle imagery, handed to the software development team for integration into production.</li>
+                <li>Built an <b>NLP ticket classification system</b>, handed to the software team for integration.</li>
+                <li>Built an <b>NLP call analyser</b> that transcribes and audits customer calls, summarises them, and surfaces the whole thing in a <b>Streamlit</b> dashboard so call quality can be reviewed without listening to the call.</li>
+              </ul>
+              <ul class="chips chips--tight">
+                <li>Python</li><li>SQL</li><li>Grafana</li><li>VLM</li><li>NLP</li><li>PostgreSQL</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="entry reveal">
+        <div class="entry__when">
+          <span class="entry__dot"></span>
+          <time>Aug 2024 – May 2025</time>
+        </div>
+        <div class="entry__body">
+          <div class="entry__head">
+            <h3>Private Tutor</h3>
+            <p class="entry__org">Tutor Doctor</p>
+          </div>
+          <p class="entry__lede">
+            Tutored students from Grade 1 through Grade 12 in Afrikaans, IT and Mathematics,
+            which is really an exercise in rebuilding one explanation a dozen different ways
+            until it takes. The same skill I use explaining a dashboard to the person who has
+            to act on it.
+          </p>
+        </div>
+      </li>
+
+      <li class="entry reveal">
+        <div class="entry__when">
+          <span class="entry__dot"></span>
+          <time>2023</time>
+        </div>
+        <div class="entry__body">
+          <div class="entry__head">
+            <h3>Student Representative Council</h3>
+            <p class="entry__org">Belgium Campus ITversity</p>
+          </div>
+          <p class="entry__lede">
+            Coordinated campus events and ran club activities, and represented the institution
+            to prospective students on open days.
+          </p>
+        </div>
+      </li>
+
+    </ol>
+  </div>
+</section>
+
+
+<!-- ═══════════════════ CHAPTER II · THE DECK ═══════════════════ -->
+<section class="ch ch--bone" id="deck" data-chapter="deck">
+  <div class="wrap">
+
+    <header class="chtitle reveal">
+      <span class="chtitle__num">Chapter II</span>
+      <h2 class="chtitle__h">The Deck</h2>
+      <p class="chtitle__sub">Six works, dealt as arcana. <b>Turn a card</b> to read what it actually is,
+        and its <em>inverted</em> meaning: the part that was genuinely hard.
+        <span class="chtitle__note">The numeral is the weight of the work, not the order I built it.</span>
+      </p>
+    </header>
+
+    <div class="deck__bar">
+      <button class="btn btn--ghost btn--sm" id="shuffleBtn" type="button" data-burst>Shuffle the deck</button>
+      <button class="btn btn--ghost btn--sm" id="randomBtn" type="button" data-burst>Draw at random</button>
+      <span class="deck__count"><b id="flipCount">0</b> / 6 read</span>
+    </div>
+
+    <div class="deck" id="deckGrid">
+
+      <!-- I · THE MAGICIAN -->
+      <article class="card reveal" data-card role="group"
+               aria-label="The Magician: Hermes, autonomous trading agent">
+        <div class="card__inner">
+          <div class="card__face card__face--front">
+            <span class="card__num">I</span>
+            <div class="card__art"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#t-magician"/></svg></div>
+            <h3 class="card__name">Hermes</h3>
+            <p class="card__arcana">The Magician</p>
+            <p class="card__kicker">Autonomous Trading Agent</p>
+            <span class="card__hint">Turn the card</span>
+            <button class="card__turn" type="button"></button>
+          </div>
+          <div class="card__face card__face--back">
+            <p class="card__arcana card__arcana--top">I · The Magician</p>
+            <button class="card__turn-back" type="button">↺ Turn back</button>
+            <h3 class="card__name">Hermes</h3>
+            <p class="card__read">
+              An autonomous trading agent built on Nous Research's Hermes Agent framework, wired
+              straight into Polymarket's CLOB on the Polygon blockchain. It runs unattended,
+              24 hours a day, on an Oracle Cloud Infrastructure VM, signing its own orders.
+            </p>
+            <ul class="chips">
+              <li>Python</li><li>Hermes Agent</li><li>Polymarket CLOB</li><li>Polygon</li>
+              <li>Gnosis Safe</li><li>Oracle Cloud</li>
+            </ul>
+            <p class="card__inv"><b>Inverted:</b> key custody was the whole problem. A lone hot
+              wallet is a liability, so the agent signs through an EOA signer sitting behind a
+              Gnosis Safe proxy: it can trade, but it can never move the treasury.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- III · THE EMPRESS -->
+      <article class="card reveal" data-card role="group"
+               aria-label="The Empress: ReputeIQ, reputation intelligence platform">
+        <div class="card__inner">
+          <div class="card__face card__face--front">
+            <span class="card__num">III</span>
+            <div class="card__art"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#t-empress"/></svg></div>
+            <h3 class="card__name">ReputeIQ</h3>
+            <p class="card__arcana">The Empress</p>
+            <p class="card__kicker">Reputation Intelligence Platform</p>
+            <span class="card__hint">Turn the card</span>
+            <button class="card__turn" type="button"></button>
+          </div>
+          <div class="card__face card__face--back">
+            <p class="card__arcana card__arcana--top">III · The Empress</p>
+            <button class="card__turn-back" type="button">↺ Turn back</button>
+            <h3 class="card__name">ReputeIQ</h3>
+            <p class="card__read">
+              A full-stack reputation platform for local businesses. Google Business Profile OAuth,
+              review sync on cron, AI reply generation in three tones, email and SMS campaigns with
+              contact import, multi-tier billing through PayPal, and a weekly digest, for salons
+              and clinics that have reviews but no idea what they're worth.
+            </p>
+            <ul class="chips">
+              <li>Next.js</li><li>TypeScript</li><li>Supabase</li><li>PostgreSQL</li>
+              <li>Tailwind</li><li>GPT-4o-mini</li><li>Vercel</li><li>Vitest</li>
+            </ul>
+            <p class="card__inv"><b>Inverted:</b> the loop was easy and the point was hard.
+              Collect → respond → campaign is plumbing. Proving that reputation actually moves
+              revenue is the unsolved part, and it's the only part a customer pays for.</p>
+            <a class="card__src" href="https://github.com/ianF57/reputeiq" target="_blank" rel="noopener">Source ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- X · WHEEL OF FORTUNE -->
+      <article class="card reveal" data-card role="group"
+               aria-label="Wheel of Fortune: TonkaT-algo, quant market regime engine">
+        <div class="card__inner">
+          <div class="card__face card__face--front">
+            <span class="card__num">X</span>
+            <div class="card__art"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#t-wheel"/></svg></div>
+            <h3 class="card__name">TonkaT-algo</h3>
+            <p class="card__arcana">Wheel of Fortune</p>
+            <p class="card__kicker">Quant Market Regime Engine</p>
+            <span class="card__hint">Turn the card</span>
+            <button class="card__turn" type="button"></button>
+          </div>
+          <div class="card__face card__face--back">
+            <p class="card__arcana card__arcana--top">X · Wheel of Fortune</p>
+            <button class="card__turn-back" type="button">↺ Turn back</button>
+            <h3 class="card__name">TonkaT-algo</h3>
+            <p class="card__read">
+              A self-hosted quantitative analysis backend. It pulls OHLCV price data across crypto,
+              forex and futures on timeframes from one minute to one week, caches it locally, then
+              classifies the market's current regime and returns ranked strategy signals behind a
+              bearer-token API with a server-rendered dashboard.
+            </p>
+            <ul class="chips">
+              <li>Python</li><li>FastAPI</li><li>SQLite</li><li>Pandas</li>
+              <li>Docker</li><li>Jinja2</li><li>Binance</li><li>Yahoo Finance</li>
+            </ul>
+            <p class="card__inv"><b>Inverted:</b> regime classification is easy to make look clever
+              and hard to make honest. It fuses rolling volatility, ADX, RSI distribution,
+              volatility clustering and a Hurst exponent proxy. And a confidence score that is
+              never wrong is a confidence score that isn't measuring anything.</p>
+            <a class="card__src" href="https://github.com/ianF57/TonkaT-algo" target="_blank" rel="noopener">Source ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- XVII · THE STAR -->
+      <article class="card reveal" data-card role="group"
+               aria-label="The Star: KITSUNE, brand system and Shopify storefront">
+        <div class="card__inner">
+          <div class="card__face card__face--front">
+            <span class="card__num">XVII</span>
+            <div class="card__art"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#t-star"/></svg></div>
+            <h3 class="card__name">KITSUNE</h3>
+            <p class="card__arcana">The Star</p>
+            <p class="card__kicker">Brand System &amp; Shopify Storefront</p>
+            <span class="card__hint">Turn the card</span>
+            <button class="card__turn" type="button"></button>
+          </div>
+          <div class="card__face card__face--back">
+            <p class="card__arcana card__arcana--top">XVII · The Star</p>
+            <button class="card__turn-back" type="button">↺ Turn back</button>
+            <h3 class="card__name">KITSUNE</h3>
+            <p class="card__read">
+              A complete brand and single-page storefront for a South African premium gym-accessories
+              label (wrist wraps, lifting straps, elbow sleeves) in a market-testing phase.
+              Delivered as a design system with tone-of-voice rules, a component kit, preview
+              specimens and an importable Shopify theme.
+            </p>
+            <ul class="chips">
+              <li>Shopify Liquid</li><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Design Systems</li>
+            </ul>
+            <p class="card__inv"><b>Inverted:</b> writing the rule "no border-radius anywhere" takes
+              a minute. Holding it across a hundred components, a cart modal, a sticky header and a
+              mobile nav is the actual design work.</p>
+            <a class="card__src" href="https://github.com/ianF57/Shopify_website" target="_blank" rel="noopener">Source ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- XX · JUDGEMENT -->
+      <article class="card reveal" data-card role="group"
+               aria-label="Judgement: three models in production">
+        <div class="card__inner">
+          <div class="card__face card__face--front">
+            <span class="card__num">XX</span>
+            <div class="card__art"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#t-judgement"/></svg></div>
+            <h3 class="card__name">Judgement</h3>
+            <p class="card__arcana">Three Models in Production</p>
+            <p class="card__kicker">VLM · NLP Classification · Call Analysis</p>
+            <span class="card__hint">Turn the card</span>
+            <button class="card__turn" type="button"></button>
+          </div>
+          <div class="card__face card__face--back">
+            <p class="card__arcana card__arcana--top">XX · Judgement</p>
+            <button class="card__turn-back" type="button">↺ Turn back</button>
+            <h3 class="card__name">Vision, Language, Voice</h3>
+            <p class="card__read">
+              Three models taken from notebook to production. A Vision-Language Model
+              that reads VIN numbers off vehicle photographs. An NLP classifier that routes support
+              tickets. An NLP call analyser that summarises conversations so nobody has to listen
+              to them twice. All three handed to the software development team for integration.
+            </p>
+            <ul class="chips">
+              <li>Python</li><li>Vision-Language Models</li><li>NLP</li>
+              <li>Classification</li><li>Summarisation</li>
+            </ul>
+            <p class="card__inv"><b>Inverted:</b> a model that is 94% accurate in a notebook and a
+              model that is 94% accurate on a grimy photograph of a windscreen VIN plate are not the
+              same model. Production is always the second one.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- XXI · THE WORLD -->
+      <article class="card reveal" data-card role="group"
+               aria-label="The World: generative agent-based modelling dissertation">
+        <div class="card__inner">
+          <div class="card__face card__face--front">
+            <span class="card__num">XXI</span>
+            <div class="card__art"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#t-world"/></svg></div>
+            <h3 class="card__name">The World</h3>
+            <p class="card__arcana">Dissertation</p>
+            <p class="card__kicker">Generative Agent-Based Modelling</p>
+            <span class="card__hint">Turn the card</span>
+            <button class="card__turn" type="button"></button>
+          </div>
+          <div class="card__face card__face--back">
+            <p class="card__arcana card__arcana--top">XXI · The World</p>
+            <button class="card__turn-back" type="button">↺ Turn back</button>
+            <h3 class="card__name">Gauteng, Simulated</h3>
+            <p class="card__read">
+              Final-year dissertation. Applied Generative Agent-Based Modelling to the Gauteng
+              City-Region, grounding agent behaviour in GCRO Quality of Life Survey data through
+              GraphRAG: a city of agents whose beliefs come from what real residents actually said.
+            </p>
+            <ul class="chips">
+              <li>Python</li><li>GABM</li><li>GraphRAG</li><li>Knowledge Graphs</li>
+              <li>LLM Agents</li><li>POPIA</li>
+            </ul>
+            <p class="card__inv"><b>Inverted:</b> simulating a city means simulating people, and
+              POPIA does not care that it's for research. Consent, aggregation and re-identification
+              risk shaped the architecture more than any modelling choice did.</p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═════════════════ CHAPTER III · THE DOCTRINES ═════════════════ -->
+<section class="ch ch--ink" id="doctrines" data-chapter="doctrines">
+  <div class="wrap">
+
+    <header class="chtitle reveal">
+      <span class="chtitle__num">Chapter III</span>
+      <h2 class="chtitle__h">The Doctrines</h2>
+      <p class="chtitle__sub">What I actually work in. Every entry here is something I have shipped
+        with, not something I have read about.</p>
+    </header>
+
+    <div class="tablets">
+
+      <article class="tablet reveal" style="--tint:#93A85E">
+        <div class="tablet__tab">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><use href="#s-doctrine"/></svg>
+          <h3>Work &amp; Worship</h3>
+          <p class="tablet__sub">Languages</p>
+        </div>
+        <ul class="tablet__list">
+          <li><b>Python</b><span>Daily driver: ML, pipelines, automation</span></li>
+          <li><b>SQL</b><span>Multi-region PostgreSQL in production</span></li>
+          <li><b>C#</b><span>.NET coursework &amp; solutions</span></li>
+          <li><b>TypeScript</b><span>Next.js application work</span></li>
+          <li><b>HTML / CSS / JS</b><span>Front ends, storefronts, dashboards</span></li>
+        </ul>
+      </article>
+
+      <article class="tablet reveal" style="--tint:#E4573F">
+        <div class="tablet__tab">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><use href="#s-doctrine"/></svg>
+          <h3>Law &amp; Order</h3>
+          <p class="tablet__sub">Machine Learning &amp; Data</p>
+        </div>
+        <ul class="tablet__list">
+          <li><b>Natural Language Processing</b><span>Classification, summarisation</span></li>
+          <li><b>Speech Recognition</b><span>Transcription, speaker identification</span></li>
+          <li><b>Computer Vision</b><span>Vision-Language Models, document reads</span></li>
+          <li><b>LLM Applications</b><span>Multi-pass auditing over transcripts</span></li>
+          <li><b>Predictive Modeling</b><span>Regime detection, signal ranking</span></li>
+          <li><b>Feature Engineering</b><span>Volatility, ADX, RSI distributions</span></li>
+          <li><b>Model Evaluation</b><span>The part that keeps you honest</span></li>
+          <li><b>GraphRAG &amp; Agents</b><span>Knowledge-grounded simulation</span></li>
+        </ul>
+      </article>
+
+      <article class="tablet reveal" style="--tint:#F0BC55">
+        <div class="tablet__tab">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><use href="#s-doctrine"/></svg>
+          <h3>Sustenance</h3>
+          <p class="tablet__sub">Tools &amp; Platforms</p>
+        </div>
+        <ul class="tablet__list">
+          <li><b>Grafana</b><span>Production operational dashboards</span></li>
+          <li><b>Pandas</b><span>Analysis and transformation</span></li>
+          <li><b>PyTorch</b><span>Model inference and training runs</span></li>
+          <li><b>Streamlit</b><span>Review and audit interfaces</span></li>
+          <li><b>FastAPI</b><span>Token-secured analysis backends</span></li>
+          <li><b>Supabase / PostgreSQL</b><span>Application data layer</span></li>
+          <li><b>Docker</b><span>Containerised services</span></li>
+          <li><b>Git &amp; Oracle Cloud</b><span>Version control, always-on hosting</span></li>
+        </ul>
+      </article>
+
+      <article class="tablet reveal" style="--tint:#9B7BC4">
+        <div class="tablet__tab">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><use href="#s-doctrine"/></svg>
+          <h3>Afterlife</h3>
+          <p class="tablet__sub">Practice</p>
+        </div>
+        <ul class="tablet__list">
+          <li><b>Business Intelligence</b><span>Owning the numbers a company steers by</span></li>
+          <li><b>Report Automation</b><span>Removing the human from the loop</span></li>
+          <li><b>Data Analysis</b><span>Turning a question into a query</span></li>
+          <li><b>POPIA Compliance</b><span>Handling personal data lawfully</span></li>
+          <li><b>Technical Teaching</b><span>Grade 1 to Grade 12, and stakeholders since</span></li>
+        </ul>
+      </article>
+
+    </div>
+
+    <div class="scroll-ticker" aria-hidden="true">
+      <div class="scroll-ticker__track">
+        <span>Python</span><i>✦</i><span>SQL</span><i>✦</i><span>Grafana</span><i>✦</i>
+        <span>Pandas</span><i>✦</i><span>FastAPI</span><i>✦</i><span>NLP</span><i>✦</i>
+        <span>Computer Vision</span><i>✦</i><span>Feature Engineering</span><i>✦</i>
+        <span>Supabase</span><i>✦</i><span>Docker</span><i>✦</i><span>GraphRAG</span><i>✦</i>
+        <span>TypeScript</span><i>✦</i><span>PostgreSQL</span><i>✦</i><span>Next.js</span><i>✦</i>
+        <span>Python</span><i>✦</i><span>SQL</span><i>✦</i><span>Grafana</span><i>✦</i>
+        <span>Pandas</span><i>✦</i><span>FastAPI</span><i>✦</i><span>NLP</span><i>✦</i>
+        <span>Computer Vision</span><i>✦</i><span>Feature Engineering</span><i>✦</i>
+        <span>Supabase</span><i>✦</i><span>Docker</span><i>✦</i><span>GraphRAG</span><i>✦</i>
+        <span>TypeScript</span><i>✦</i><span>PostgreSQL</span><i>✦</i><span>Next.js</span><i>✦</i>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═════════════════ CHAPTER IV · THE FAITHFUL ═════════════════ -->
+<section class="ch ch--bone" id="faithful" data-chapter="faithful">
+  <div class="wrap">
+
+    <header class="chtitle reveal">
+      <span class="chtitle__num">Chapter IV</span>
+      <h2 class="chtitle__h">The Faithful</h2>
+      <p class="chtitle__sub">Formation, certification, and the tongues I can argue in.</p>
+    </header>
+
+    <div class="faithful">
+
+      <div class="flock reveal">
+        <h3 class="minih minih--lg">Ordination</h3>
+
+        <div class="flock__row">
+          <svg class="flock__face" viewBox="0 0 100 110" style="color:#D0402C" aria-hidden="true"><use href="#i-follower"/></svg>
+          <div>
+            <h4>BSc Computer Science</h4>
+            <p>Belgium Campus ITversity <span class="mono">2023 – Present</span></p>
+            <p class="flock__note">Computer Science, with the final year given over to the Gauteng
+              agent-based modelling dissertation.</p>
+          </div>
+        </div>
+
+        <div class="flock__row">
+          <svg class="flock__face" viewBox="0 0 100 110" style="color:#5C6B3F" aria-hidden="true"><use href="#i-follower"/></svg>
+          <div>
+            <h4>National Senior Certificate</h4>
+            <p>High School Eduplex <span class="mono">2018 – 2022</span></p>
+          </div>
+        </div>
+
+        <h3 class="minih minih--lg">Certifications</h3>
+        <ul class="rites rites--cert">
+          <li><b>Kaggle</b>: Python</li>
+          <li><b>Kaggle</b>: Pandas</li>
+          <li><b>Kaggle</b>: Intermediate Machine Learning</li>
+        </ul>
+      </div>
+
+      <aside class="tongues reveal">
+        <h3 class="minih minih--lg">Tongues</h3>
+        <ul class="tongues__list">
+          <li>
+            <span class="tongues__name">English</span>
+            <span class="tongues__bar"><i style="--w:100%"></i></span>
+            <span class="tongues__lvl mono">Full professional</span>
+          </li>
+          <li>
+            <span class="tongues__name">Afrikaans</span>
+            <span class="tongues__bar"><i style="--w:100%"></i></span>
+            <span class="tongues__lvl mono">Full professional</span>
+          </li>
+          <li>
+            <span class="tongues__name">Dutch</span>
+            <span class="tongues__bar"><i style="--w:35%"></i></span>
+            <span class="tongues__lvl mono">Passive / receptive</span>
+          </li>
+        </ul>
+
+        <div class="tongues__card">
+          <svg class="tongues__coin" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-coin"/></svg>
+          <p><b>References</b> available on request.</p>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═════════════════ CHAPTER V · THE TRIALS ═════════════════ -->
+<section class="ch ch--ink" id="trials" data-chapter="trials">
+  <div class="wrap">
+
+    <header class="chtitle reveal">
+      <span class="chtitle__num">Chapter V</span>
+      <h2 class="chtitle__h">The Trials</h2>
+      <p class="chtitle__sub">Two of the systems I build, put in front of you instead of described
+        to you. Everything below is output the pipelines actually produced, replayed.</p>
+    </header>
+
+    <div class="terms reveal">
+      <h3 class="minih">Terms of the trial</h3>
+      <p>Both projects are Python that needs private model weights and customer media, so neither
+        can run inside a browser tab, and I will not pretend otherwise. What <em>can</em> run here
+        does, and each trial has a panel at the bottom of it that runs on <b>your</b> file rather
+        than mine. Hand the first trial a photograph of a plate and it measures it the way the
+        project measures a crop, number for number, flag for flag. Hand the second a recording and
+        it decodes it, gates it, applies the project's trim rule and draws the waveform it found.
+        The validation rules, the scoring functions and the trim thresholds are all ported to
+        JavaScript, they are live, and you can type at them. Everything else is read back out of
+        the projects' own code and their own published sample corpora.</p>
+      <p>So each trial states its own provenance, and I have kept the two kinds of evidence apart.
+        Where a number was <b>computed</b>, the project computed it. Where a corpus is
+        <b>fabricated</b>, the trial says so in as many words. A portfolio that blurs those two
+        together is not worth reading.</p>
+      <p class="terms__fine mono">The plates are drawn renders, not photographs, and every VIN
+        carries a SYN prefix so it cannot collide with a real vehicle. The call corpus is invented
+        end to end. The agents in it are anonymous voice clusters, never names.</p>
+    </div>
+
+
+    <!-- ─────────────── TRIAL I · THE SIGIL ─────────────── -->
+    <article class="trial reveal" style="--tint:#E3A93C" id="trialSigil">
+      <header class="trial__head">
+        <span class="trial__num">Trial I</span>
+        <h3 class="trial__h">The Sigil</h3>
+        <p class="trial__sub">A vehicle carries its identity stamped on a plate. This one reads that
+          plate off a photograph: find it, refuse it if it is too poor to trust, read the
+          characters, choose the right line of text, then validate. Six plates, drawn to be
+          awkward in six different ways.</p>
+        <p class="trial__src"><b>Provenance.</b> These reads are not a re-enactment. The project's
+          own OCR and validation functions were run over these six plates when this page was
+          built, and the confidences below are the ones it returned. The plates themselves are
+          synthetic renders. One substitution is marked where it appears: the trained segmentation
+          model is private, so the plate box comes from thresholding instead. Two more stages of the
+          real system are not replayed here at all: the deskew, which needs those segmentation
+          polygons, and a <b>Vision-Language Model cross-check</b> that resolves the plates the
+          classical chain cannot. In production the whole thing is reconciled into a multi-tab
+          Excel export before it reaches the software team.</p>
+        <ul class="chips chips--tight">
+          <li>YOLO11-seg</li><li>OpenCV</li><li>PaddleOCR</li><li>Vision-Language Models</li>
+        </ul>
+      </header>
+
+      <div class="sigil">
+        <div class="sigil__rail">
+          <h4 class="minih" id="sigilRailH">The corpus</h4>
+          <div class="sigil__plates" id="sigilPlates" role="group" aria-labelledby="sigilRailH"></div>
+          <p class="sigil__tally mono" id="sigilTally"></p>
+        </div>
+
+        <div class="sigil__stage">
+          <figure class="sigil__plate">
+            <div class="sigil__frame">
+              <img id="sigilImg" src="assets/img/plates/T00001.jpg"
+                   alt="A rendered test plate reading SYN1A2B3C4D5E6F78.">
+              <svg class="sigil__box" id="sigilBox" viewBox="0 0 100 100" preserveAspectRatio="none"
+                   aria-hidden="true"></svg>
+            </div>
+            <figcaption class="sigil__cap mono" id="sigilCap">T00001 · clean, straight-on</figcaption>
+          </figure>
+
+          <div class="sigil__readout">
+            <h4 class="minih" id="sigilStepsH">The reading, stage by stage</h4>
+            <ol class="steps" id="sigilSteps" aria-labelledby="sigilStepsH" aria-live="polite"></ol>
+            <button class="btn btn--gild" id="sigilRead" type="button" data-burst>Read the sigil</button>
+            <p class="sigil__verdict" id="sigilVerdict" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="forge">
+        <div class="forge__head">
+          <h4 class="minih">The repair, live</h4>
+          <span class="tag tag--live">live</span>
+        </div>
+        <p>A VIN is seventeen characters of A to Z and 0 to 9, and the letters I, O and Q are
+          excluded from it entirely. They are excluded <em>because</em> they look like 1 and 0, which
+          is exactly what OCR returns for them. So a candidate that is otherwise perfectly shaped
+          but fails on nothing except a banned letter is probably a real VIN that was misread.
+          These are the notebook's own rules, ported line for line. Change the I to a 1, or retype
+          the whole thing, and watch what it says.</p>
+
+        <div class="forge__row">
+          <label class="sr" for="vinIn">A VIN candidate, as OCR might have returned it</label>
+          <input class="forge__in mono" id="vinIn" type="text" value="SYNIA2B3C4D5E6F78"
+                 spellcheck="false" autocomplete="off" autocapitalize="characters">
+          <button class="btn btn--gild" id="vinGo" type="button" data-burst>Validate</button>
+        </div>
+
+        <div class="forge__out" id="vinOut" aria-live="polite"></div>
+      </div>
+
+      <div class="bring" id="bringPlate">
+        <div class="bring__head">
+          <h4 class="minih">Bring your own plate</h4>
+          <span class="tag tag--run">runs on your file</span>
+        </div>
+        <p>The gate in the reading above was measured, not remembered. Give it a photograph and
+          it measures yours the same way: a copy rescaled to the project's own 1024px, the
+          contrast-normalised Brenner focus that decides the blur flag, the exposure, and the Otsu
+          stroke contrast it reports but does not vote with. Then type what you can read on the
+          plate, or paste what some other reader returned, and the notebook's own rules run over
+          that text for real.</p>
+        <p class="bring__gap">Two stages cannot run here, and the panel says so where they would
+          have been: <b>detection</b> needs trained weights this page does not carry, and
+          <b>OCR</b> needs a Python runtime it does not have. Everything upstream and downstream of
+          those two does run. Your file is read in the browser and never leaves it.</p>
+
+        <label class="bring__drop" id="ownPlateDrop" for="ownPlate">
+          <input class="sr" id="ownPlate" type="file" accept="image/*">
+          <svg class="bring__ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dagger"/></svg>
+          <span class="bring__drop-k">Choose a photograph</span>
+          <span class="bring__drop-s mono">or drop one on this frame</span>
+        </label>
+
+        <div class="bring__body" id="ownPlateBody" hidden>
+          <figure class="bring__fig">
+            <img id="ownPlateImg" alt="">
+            <figcaption class="bring__cap mono" id="ownPlateCap"></figcaption>
+          </figure>
+          <div class="bring__side">
+            <h5 class="bring__k">The gate, measured on your file</h5>
+            <div class="bring__gate" id="ownPlateGate" aria-live="polite"></div>
+            <h5 class="bring__k">What the plate reads</h5>
+            <label class="sr" for="ownVin">The characters on your plate, as you or another reader
+              read them</label>
+            <div class="forge__row">
+              <input class="forge__in mono" id="ownVin" type="text" spellcheck="false"
+                     autocomplete="off" autocapitalize="characters"
+                     placeholder="SYN1A2B3C4D5E6F78">
+              <button class="btn btn--gild" id="ownVinGo" type="button" data-burst>Validate</button>
+            </div>
+            <div class="forge__out" id="ownVinOut" aria-live="polite"></div>
+          </div>
+        </div>
+        <noscript>
+          <p class="bring__gap mono">The panel needs JavaScript, and the gate needs a canvas to
+            measure pixels with. The six plates above need it too.</p>
+        </noscript>
+      </div>
+
+      <noscript>
+        <p class="terms__fine mono">This trial needs JavaScript. The corpus holds six rendered
+          plates, and the pipeline read all six exactly. The whole-image quality gate flags every
+          one of them blurry; the crop-level gate, which is what the characters are read from,
+          passes three, and the flagged three still read. The last plate is the one whose two OCR
+          lines come back at the same confidence, which is why the selector takes shape rather
+          than score.</p>
+      </noscript>
+    </article>
+
+
+    <!-- ─────────────── TRIAL II · THE CONFESSION ─────────────── -->
+    <article class="trial reveal" style="--tint:#D0402C" id="trialConfession">
+      <header class="trial__head">
+        <span class="trial__num">Trial II</span>
+        <h3 class="trial__h">The Confession</h3>
+        <p class="trial__sub">A retention call, transcribed and then audited. Which segments can be
+          trusted, which language was spoken, whose voice it was, and how much of the error rate is
+          one model artefact wearing a disguise. On the bilingual English and isiZulu calls it was
+          built for, speaker identification reached <b>92%</b>, measured against hand-verified
+          transcripts.</p>
+        <p class="trial__src"><b>Provenance.</b> The corpus is the project's own published sample:
+          eight invented calls, written in the exact record schema the pipeline emits, with the
+          dashboard's thresholds imported from its config so the sample trips the same flags real
+          output would. Every word and every id in it is fabricated. The error rates are the
+          corpus's own recorded ones, carried in each record exactly as the pipeline wrote them,
+          which is why the call with no hand-checked reference carries none and reads as not
+          scored. The scoring functions behind those numbers are ported to JavaScript further down
+          this trial, and they run there on text you supply.</p>
+        <ul class="chips chips--tight">
+          <li>faster-whisper</li><li>Silero VAD</li><li>ECAPA-TDNN</li><li>GlotLID</li><li>rapidfuzz</li>
+          <li>Streamlit</li>
+        </ul>
+        <p class="terms__fine mono" style="margin-top:.9rem">The transcripts that came out of this
+          were benchmarked against hand-verified reference text and then kept: clean training data
+          for a custom speech model.</p>
+      </header>
+
+      <div class="conf">
+        <div class="conf__col">
+          <h4 class="minih" id="confListH">The recordings</h4>
+          <div class="conf__list" id="confList" role="group" aria-labelledby="confListH"></div>
+        </div>
+
+        <div class="conf__audit">
+          <div class="conf__meta" id="confMeta"></div>
+
+          <figure class="cmap">
+            <div class="cmap__scroll">
+              <svg class="cmap__svg" id="confMap" viewBox="0 0 760 210" role="img"
+                   aria-labelledby="confMapT"><title id="confMapT">Conversation map</title></svg>
+            </div>
+            <figcaption>Time runs left to right. The agent speaks above the line, the caller below.
+              Vermilion marks a segment the audit flagged, and a struck bar is one it dropped
+              outright. On a narrow screen the map keeps its scale and scrolls sideways, because
+              a timeline squeezed to fit stops being readable. Every segment drawn here is listed
+              underneath in full.</figcaption>
+          </figure>
+
+          <h4 class="minih" id="confSegsH">The ledger</h4>
+          <ol class="segs" id="confSegs" aria-labelledby="confSegsH"></ol>
+
+          <h4 class="minih" id="confMetricsH">The scores</h4>
+          <div class="conf__metrics" id="confMetrics" aria-labelledby="confMetricsH"></div>
+        </div>
+      </div>
+
+      <div class="artefact">
+        <h4 class="minih">The planted artefact</h4>
+        <p>The corpus plants a fault on purpose: five of the eight records end with the same four
+          words. Whisper's classic repetition loop on silence, confident and repetitive at once,
+          which is precisely what the repetition-risk flag exists to catch. So the detector has
+          something to find, and this is what it found. Read the confidence next to the
+          compression ratio: confidence alone would keep every one of these.</p>
+        <div id="confArtefact"></div>
+      </div>
+
+      <div class="corpus">
+        <h4 class="minih">The verdict on the corpus</h4>
+        <dl class="corpus__stats" id="confStats"></dl>
+        <p class="corpus__note">The error rates are pooled across the four calls that carry a
+          hand-checked reference. The other four have none, so they are not scored, and this page
+          will not invent a number for them. One of the four scored calls carries the planted
+          tail: scoring it as it stands costs 13.95% word error, and dropping the tail takes the
+          same call to 7.75%. Across the corpus that is <b>9.54%</b> down to <b>7.95%</b>. That gap
+          is the whole argument for auditing a transcript rather than trusting it.</p>
+      </div>
+
+      <div class="bring" id="bringAudio">
+        <div class="bring__head">
+          <h4 class="minih">Bring your own recording</h4>
+          <span class="tag tag--run">runs on your file</span>
+        </div>
+        <p>The audit above ran on invented calls. Hand it a recording and it does the same work on
+          yours: it decodes the file, converts it to mono at the project's own 16 kHz, measures the
+          speech and the silence frame by frame, draws the waveform it actually found, and then
+          applies the project's trim rule to the result, which is that only silences of
+          <b>two seconds or more</b> are cut, and they are cut down to a <b>300 ms</b> gap rather
+          than removed. Those are the project's own constants, and natural pauses survive them.</p>
+        <p class="bring__gap">Two stages cannot run here and the panel says so where they would
+          have been. <b>Silero VAD</b> is a trained network this page does not carry, so the panel
+          uses an energy gate instead and calls it that rather than borrowing the name. And
+          <b>Whisper</b> is a model, not a browser API, so it cannot transcribe your audio. The
+          scoring, however, is real: give it what a recogniser returned and what the truth was, and
+          the error rates below are computed by the project's own functions.</p>
+
+        <label class="bring__drop" id="ownAudioDrop" for="ownAudio">
+          <input class="sr" id="ownAudio" type="file" accept="audio/*">
+          <svg class="bring__ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pentagram"/></svg>
+          <span class="bring__drop-k">Choose a recording</span>
+          <span class="bring__drop-s mono">or drop one on this frame</span>
+        </label>
+
+        <div class="bring__body bring__body--wide" id="ownAudioBody" hidden>
+          <div class="bring__side">
+            <div class="bring__figure">
+              <svg class="bring__wave" id="ownWave" viewBox="0 0 1000 116"
+                   preserveAspectRatio="none" role="img"
+                   aria-labelledby="ownWaveT"><title id="ownWaveT">Waveform of your recording</title></svg>
+              <figcaption class="bring__cap mono" id="ownAudioCap"></figcaption>
+            </div>
+
+            <h5 class="bring__k">The recording, as this page measures it</h5>
+            <div id="ownAudioFacts" aria-live="polite"></div>
+
+            <h5 class="bring__k">What the recogniser returned, and what was actually said</h5>
+            <p class="bring__gap">Paste a transcript into either box. Leave the reference empty and
+              the error rates are not scored, which is exactly what the project does with a call
+              that has no hand-checked reference. Leave both empty and there is nothing to score;
+              the panel will say so rather than guess.</p>
+            <div class="bring__pair">
+              <div>
+                <label class="bring__lbl" for="ownHyp">Transcript, as returned</label>
+                <textarea class="bring__ta" id="ownHyp" spellcheck="false"
+                          placeholder="Let me pull up your account. Can I get your reference number?"></textarea>
+              </div>
+              <div>
+                <label class="bring__lbl" for="ownRef">Reference, hand-checked</label>
+                <textarea class="bring__ta" id="ownRef" spellcheck="false"
+                          placeholder="Optional. Without it no error rate can be computed."></textarea>
+              </div>
+            </div>
+
+            <div class="bring__pair">
+              <div>
+                <label class="bring__lbl" for="ownLp">Average logprob, if you have it</label>
+                <input class="forge__in mono" id="ownLp" type="number" step="0.01"
+                       inputmode="decimal" placeholder="-0.31">
+              </div>
+              <div>
+                <label class="bring__lbl" for="ownCr">Compression ratio, if you have it</label>
+                <input class="forge__in mono" id="ownCr" type="number" step="0.1"
+                       inputmode="decimal" placeholder="6.10">
+              </div>
+            </div>
+            <p class="bring__gap mono">Both of those come from the recogniser's own token stream and
+              cannot be recomputed here without it. Leave either blank and the rule skips that
+              condition, which is what the project does when a record has no value for it.</p>
+
+            <div class="forge__row">
+              <button class="btn btn--gild" id="ownScore" type="button" data-burst>Score it</button>
+            </div>
+            <div class="forge__out" id="ownScoreOut" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <noscript>
+          <p class="bring__gap mono">The panel needs JavaScript, a Web Audio decoder to read the
+            file, and a canvas to measure it with. The corpus above needs JavaScript too.</p>
+        </noscript>
+      </div>
+
+      <noscript>
+        <p class="terms__fine mono">This trial needs JavaScript. The corpus holds 8 invented calls
+          and 63 segments, of which the audit flagged 24 and dropped 5 as hallucinated, across
+          English, Afrikaans, isiZulu and isiXhosa. Pooled word error rate is 9.54% over the four
+          calls with a reference, or 7.95% with the hallucinated segments removed.</p>
+      </noscript>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════ CHAPTER VI · THE RITE ═══════════════════ -->
+<section class="ch ch--ink ch--final" id="rite" data-chapter="rite">
+  <div class="wrap">
+
+    <header class="chtitle chtitle--center reveal">
+      <span class="chtitle__num">Chapter VI</span>
+      <h2 class="chtitle__h">The Rite</h2>
+      <p class="chtitle__sub">I am looking to grow further into applied machine learning and data
+        science. If you are hiring for that, or you just want to argue about dashboards, the
+        circle is open.</p>
+    </header>
+
+    <div class="rite reveal">
+      <div class="rite__circle" aria-hidden="true">
+        <svg viewBox="0 0 200 200"><use href="#i-pentagram"/></svg>
+      </div>
+
+      <ul class="rite__links">
+        <li>
+          <a href="mailto:faasenian0@gmail.com">
+            <span class="rite__k">Email</span>
+            <span class="rite__v">faasenian0@gmail.com</span>
+          </a>
+        </li>
+        <li>
+          <a href="tel:+27659886459">
+            <span class="rite__k">Phone</span>
+            <span class="rite__v">+27 65 988 6459</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/ian-faasen-2163791b2" target="_blank" rel="noopener">
+            <span class="rite__k">LinkedIn</span>
+            <span class="rite__v">in/ian-faasen</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/ianF57" target="_blank" rel="noopener">
+            <span class="rite__k">GitHub</span>
+            <span class="rite__v">ianF57</span>
+          </a>
+        </li>
+        <li>
+          <span class="rite__row">
+            <span class="rite__k">Location</span>
+            <span class="rite__v">Centurion, Gauteng, South Africa</span>
+          </span>
+        </li>
+      </ul>
+
+      <div class="rite__cta">
+        <a class="btn btn--blood btn--lg" href="mailto:faasenian0@gmail.com?subject=Let%27s%20talk" data-burst>
+          <svg viewBox="0 0 24 24" class="btn__ico" aria-hidden="true"><use href="#i-dagger"/></svg>
+          Recruit the Follower
+        </a>
+        <a class="btn btn--ghost" href="assets/Ian_Faasen_CV.pdf" target="_blank" rel="noopener">Download the C.V.</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+<!-- ══════════════════════════ CULT GROUNDS ══════════════════════════ -->
+<footer class="grounds">
+  <!-- The followers are real buttons: each one is labelled and can be reached
+       by Tab, so this container is not aria-hidden. Nothing decorative lives
+       here that a screen reader would have to skip. -->
+  <div class="grounds__walk" id="grounds" role="group" aria-label="Followers of the cult grounds"></div>
+
+  <div class="wrap grounds__meta">
+    <svg class="grounds__crown" viewBox="0 0 240 190" aria-hidden="true"><use href="#i-crown"/></svg>
+    <p class="grounds__line">
+      Built by hand, drawn in SVG, and devoted to the idea that a portfolio does not have to be boring.
+    </p>
+    <p class="grounds__hint">
+      <span class="mono">There is something hidden here.</span>
+      Click the crown five times, or type <kbd>P</kbd><kbd>R</kbd><kbd>A</kbd><kbd>I</kbd><kbd>S</kbd><kbd>E</kbd>.
+    </p>
+    <p class="grounds__fine mono">© <span id="year">2026</span> Ian Faasen · Centurion, South Africa</p>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════ THE REVELATION ══════════════════════════ -->
+<div class="reveal-egg" id="egg" role="dialog" aria-modal="true" aria-labelledby="eggTitle" hidden>
+  <div class="reveal-egg__penta" aria-hidden="true">
+    <svg viewBox="0 0 200 200"><use href="#i-pentagram"/></svg>
+  </div>
+  <div class="reveal-egg__box">
+    <svg class="reveal-egg__crown" viewBox="0 0 240 190" aria-hidden="true"><use href="#i-crown"/></svg>
+    <h2 id="eggTitle">The Lamb Recognises You</h2>
+    <p>You have been inducted into the Church of the Analysed. Your devotion has been noted,
+      logged, and added to a Grafana dashboard.</p>
+    <p class="mono reveal-egg__stat">Follower #<span id="eggNum">007</span> · Devotion: sufficient</p>
+    <button class="btn btn--blood" id="eggClose" type="button">Praise be. Return me.</button>
+  </div>
+</div>
+
+<script src="assets/js/demo-data.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

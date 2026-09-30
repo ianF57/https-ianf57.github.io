@@ -1,0 +1,2595 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   IAN FAASEN · The Church of the Analysed
+   A portfolio rendered as scripture.
+
+   Palette, type and geometry are all taken from the subject's own world:
+   flat fills, heavy ink outlines, warm temple parchment, and the Red Crown.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ───────────────────────────── TOKENS ───────────────────────────── */
+:root {
+  /* the six */
+  --bone:    #EFE7D3;   /* temple parchment */
+  --bone-2:  #E3D8BB;   /* shaded parchment */
+  --ink:     #1A1614;   /* heavy outline, warm black */
+  --ink-2:   #241F1C;   /* raised panel on dark */
+  --ink-deep:#141110;   /* the dark ground */
+  --blood:   #D0402C;   /* the Red Crown */
+  --blood-d: #9E2C1D;   /* dried blood */
+  --gild:    #E3A93C;   /* coins and ritual gold */
+  --ritual:  #5E4280;   /* mystic purple */
+  --moss:    #5C6B3F;   /* Leshy's woods */
+
+  /* type */
+  --display: "Grenze Gotisch", "Papyrus", Georgia, serif;
+  --body:    "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:    "Space Mono", ui-monospace, "Courier New", monospace;
+
+  /* geometry */
+  --r:      5px;
+  --stroke: 3px;
+  --wrap:   1200px;
+  --nav-h:  70px;
+
+  /* type scale */
+  --t-hero:  clamp(3.4rem, 12.5vw, 8.75rem);
+  --t-h2:    clamp(2.6rem, 6.5vw, 5rem);
+  --t-h3:    clamp(1.5rem, 2.6vw, 2.1rem);
+  --t-h4:    clamp(1.15rem, 1.7vw, 1.4rem);
+  --t-lead:  clamp(1.05rem, 1.35vw, 1.28rem);
+  --t-body:  clamp(1rem, 1.15vw, 1.1rem);
+  --t-small: .86rem;
+  --t-micro: .72rem;
+
+  /* motion */
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --snap: cubic-bezier(.34, 1.56, .64, 1);
+}
+
+/* Per-chapter theming: every component reads these, never raw colours. */
+.ch--ink {
+  --fg: var(--bone);
+  --fg-dim: rgba(239, 231, 211, .64);
+  --fg-faint: rgba(239, 231, 211, .34);
+  --bg: var(--ink-deep);
+  --line: rgba(239, 231, 211, .2);
+  --panel: var(--ink-2);
+  --panel-2: #2E2825;
+  background: var(--bg);
+  color: var(--fg);
+}
+.ch--bone {
+  --fg: var(--ink);
+  --fg-dim: rgba(26, 22, 20, .66);
+  --fg-faint: rgba(26, 22, 20, .38);
+  --bg: var(--bone);
+  --line: rgba(26, 22, 20, .22);
+  --panel: var(--bone-2);
+  --panel-2: #D9CCAC;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* ───────────────────────────── RESET ───────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 12px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--body);
+  font-size: var(--t-body);
+  line-height: 1.65;
+  background: var(--ink-deep);
+  color: var(--bone);
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grain: the whole page is printed, not rendered. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: .22;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+img, svg { display: block; max-width: 100%; }
+ul, ol { list-style: none; padding: 0; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+.sr {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+.skip {
+  position: absolute;
+  top: -100px; left: 1rem;
+  z-index: 10000;
+  padding: .7rem 1.2rem;
+  background: var(--gild);
+  color: var(--ink);
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--r);
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  text-decoration: none;
+  transition: top .2s;
+}
+.skip:focus { top: 1rem; }
+
+:focus-visible {
+  outline: 3px solid var(--gild);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection { background: var(--blood); color: var(--bone); }
+
+/* ─────────────────────────── PRIMITIVES ─────────────────────────── */
+.wrap {
+  width: min(var(--wrap), 100% - 2.5rem);
+  margin-inline: auto;
+}
+
+.mono { font-family: var(--mono); font-size: .92em; letter-spacing: -.01em; }
+
+.minih {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gild);
+  padding-bottom: .5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.minih--lg {
+  font-size: .82rem;
+  margin-bottom: 1.4rem;
+}
+
+/* ── Buttons: chunky, physical, game-UI ── */
+.btn {
+  --btn-bg: var(--gild);
+  --btn-fg: var(--ink);
+  --btn-edge: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  padding: .85rem 1.6rem;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--r);
+  box-shadow: 0 5px 0 var(--btn-edge);
+  font-family: var(--mono);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  transition: transform .14s var(--ease), box-shadow .14s var(--ease), background .2s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 var(--btn-edge);
+}
+.btn:active,
+.btn.is-pressed {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 var(--btn-edge);
+}
+.btn__ico { width: 1.05em; height: 1.05em; flex: none; }
+
+.btn--blood { --btn-bg: var(--blood); --btn-fg: var(--bone); }
+.btn--blood:hover { --btn-bg: #DE4B36; }
+
+.btn--gild { --btn-bg: var(--gild); --btn-fg: var(--ink); }
+.btn--gild:hover { --btn-bg: #F0BC55; }
+
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--fg);
+  --btn-edge: var(--fg-faint);
+  border-color: var(--fg);
+}
+.btn--ghost:hover { --btn-bg: var(--fg); --btn-fg: var(--bg); }
+
+.btn--sm { padding: .55rem 1rem; font-size: .7rem; }
+.btn--lg { padding: 1.05rem 2.2rem; font-size: .92rem; }
+
+/* ──────────────────────────── NAV ──────────────────────────── */
+.nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 900;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-inline: clamp(1rem, 3vw, 2rem);
+  background: rgba(20, 17, 16, .93);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--gild);
+  color: var(--bone);
+}
+.nav.is-stuck { box-shadow: 0 12px 34px rgba(0, 0, 0, .5); }
+
+.nav__progress {
+  position: absolute;
+  inset: auto 0 -2px 0;
+  height: 2px;
+  background: transparent;
+}
+.nav__progress span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--blood);
+  box-shadow: 0 0 12px var(--blood);
+}
+
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  text-decoration: none;
+  flex: none;
+}
+.nav__crown {
+  width: 34px;
+  height: 27px;
+  color: var(--ink);
+  flex: none;
+  transition: transform .3s var(--snap);
+}
+.nav__brand:hover .nav__crown { transform: rotate(-8deg) scale(1.12); }
+.nav__brand.is-praised .nav__crown { animation: crownPop .5s var(--snap); }
+
+@keyframes crownPop {
+  0%   { transform: scale(1) rotate(0); }
+  45%  { transform: scale(1.35) rotate(-12deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.nav__name {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+.nav__links {
+  display: flex;
+  gap: .3rem;
+  margin-inline: auto;
+}
+.nav__links a {
+  display: flex;
+  align-items: baseline;
+  gap: .45rem;
+  padding: .5rem .7rem;
+  border-radius: var(--r);
+  font-family: var(--mono);
+  font-size: .74rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(239, 231, 211, .6);
+  transition: color .2s, background .2s;
+}
+.nav__links b {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--blood);
+  transition: color .2s;
+}
+.nav__links a:hover,
+.nav__links a.is-active {
+  color: var(--bone);
+  background: rgba(239, 231, 211, .09);
+}
+.nav__links a.is-active b { color: var(--gild); }
+
+.nav__tools {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex: none;
+}
+
+.tog {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 2px solid rgba(239, 231, 211, .3);
+  border-radius: var(--r);
+  cursor: pointer;
+  color: rgba(239, 231, 211, .45);
+  transition: color .2s, border-color .2s, background .2s;
+}
+.tog svg { width: 20px; height: 22px; }
+.tog:hover { border-color: var(--gild); color: var(--gild); }
+.tog[aria-pressed="true"] {
+  color: var(--bone);
+  border-color: var(--blood);
+  background: rgba(208, 64, 44, .18);
+}
+.tog__on, .tog__off { font-family: var(--mono); font-size: 1rem; line-height: 1; }
+.tog__off { display: none; }
+.tog[aria-pressed="false"] .tog__on { display: none; }
+.tog[aria-pressed="false"] .tog__off { display: inline; position: relative; }
+.tog[aria-pressed="false"] .tog__off::after {
+  content: "";
+  position: absolute;
+  inset: 50% -3px auto -3px;
+  height: 2px;
+  background: currentColor;
+  transform: rotate(-45deg);
+}
+
+.nav__cv { padding: .5rem 1rem; font-size: .7rem; }
+
+/* ──────────────────────────── RAIL ──────────────────────────── */
+.rail {
+  position: fixed;
+  left: clamp(.8rem, 2vw, 1.6rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 800;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+}
+.rail__line {
+  position: absolute;
+  top: 0; bottom: 0; left: 50%;
+  width: 2px;
+  background: rgba(239, 231, 211, .14);
+  transform: translateX(-50%);
+  z-index: -1;
+}
+.rail__line i {
+  display: block;
+  width: 100%;
+  height: 0;
+  background: var(--blood);
+  box-shadow: 0 0 10px var(--blood);
+}
+.rail a {
+  width: 38px; height: 38px;
+  display: grid;
+  place-items: center;
+  background: rgba(18, 15, 14, .93);
+  border: 2px solid rgba(239, 231, 211, .3);
+  border-radius: 50%;
+  color: rgba(239, 231, 211, .62);
+  transition: color .25s, border-color .25s, transform .25s var(--snap), background .25s;
+}
+.rail a svg { width: 18px; height: 18px; }
+.rail a:hover { transform: scale(1.16); color: var(--bone); border-color: var(--gild); }
+.rail a.is-active {
+  color: var(--ink);
+  background: var(--blood);
+  border-color: var(--gild);
+  transform: scale(1.1);
+}
+
+/* ──────────────────────────── HERO ──────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(var(--nav-h) + 1.75rem) 0 2.75rem;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 12%, rgba(208, 64, 44, .2), transparent 68%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(94, 66, 128, .18), transparent 70%),
+    var(--bone);
+  color: var(--ink);
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero__rite {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: min(105vh, 105vw);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  color: var(--blood);
+  opacity: .11;
+  pointer-events: none;
+}
+.hero__penta {
+  width: 100%; height: 100%;
+  animation: slowSpin 180s linear infinite;
+}
+@keyframes slowSpin { to { transform: rotate(360deg); } }
+
+.hero__embers { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.ember {
+  position: absolute;
+  bottom: -10px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--blood);
+  opacity: 0;
+  animation: rise linear infinite;
+}
+.ember--gold { background: var(--gild); }
+@keyframes rise {
+  0%   { opacity: 0; transform: translateY(0) scale(.6); }
+  12%  { opacity: .85; }
+  80%  { opacity: .5; }
+  100% { opacity: 0; transform: translateY(-88vh) scale(1.2); }
+}
+
+.hero__wrap { position: relative; z-index: 2; }
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--blood-d);
+  margin-bottom: 1rem;
+}
+.eyebrow__rule {
+  display: block;
+  width: clamp(1.5rem, 6vw, 4.5rem);
+  height: 2px;
+  background: currentColor;
+  opacity: .45;
+}
+
+/* ── The Crown ── */
+.crownwrap {
+  position: relative;
+  width: clamp(126px, 17vw, 172px);
+  margin: 0 auto 1rem;
+}
+.crown {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  color: var(--ink);
+  filter: drop-shadow(0 14px 22px rgba(208, 64, 44, .3));
+  animation: crownFloat 6.5s ease-in-out infinite;
+}
+@keyframes crownFloat {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50%      { transform: translateY(-13px) rotate(1.4deg); }
+}
+.crown__spikes path,
+.crown__band { fill: var(--blood); }
+.crown__sclera { fill: var(--bone); }
+.crown__pupil { transition: transform .32s var(--ease); }
+
+.crownwrap__halo {
+  position: absolute;
+  inset: -32% -22%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(208, 64, 44, .3), transparent 66%);
+  animation: haloPulse 4.4s ease-in-out infinite;
+}
+@keyframes haloPulse {
+  0%, 100% { opacity: .55; transform: scale(.94); }
+  50%      { opacity: 1;   transform: scale(1.06); }
+}
+
+/* ── Name ── */
+.hero__name {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: var(--t-hero);
+  line-height: .82;
+  letter-spacing: -.015em;
+  margin-bottom: 1.1rem;
+  text-transform: uppercase;
+}
+.hero__name-l1,
+.hero__name-l2 { display: block; }
+.hero__name-l1 {
+  color: var(--ink);
+}
+.hero__name-l2 {
+  color: var(--blood);
+  text-shadow: 5px 5px 0 var(--ink);
+}
+
+.hero__role {
+  font-family: var(--mono);
+  font-size: clamp(.72rem, 1.5vw, .9rem);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+}
+.hero__role i { color: var(--blood); font-style: normal; padding-inline: .3rem; }
+
+.hero__blurb {
+  max-width: 64ch;
+  margin: 0 auto 1.9rem;
+  font-size: var(--t-lead);
+  line-height: 1.62;
+  color: rgba(26, 22, 20, .82);
+}
+.hero__blurb em {
+  font-style: italic;
+  color: var(--blood-d);
+  font-weight: 500;
+}
+.hero__blurb-close {
+  display: block;
+  margin-top: .3rem;
+  font-family: var(--display);
+  font-size: 1.22em;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .9rem;
+  justify-content: center;
+  margin-bottom: 2.4rem;
+}
+.hero__cta .btn--ghost { --fg: var(--ink); --fg-faint: rgba(26,22,20,.35); }
+
+/* ── Stat plates ── */
+.plates {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  max-width: 780px;
+  margin-inline: auto;
+  background: rgba(26, 22, 20, .22);
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.plate {
+  background: rgba(239, 231, 211, .55);
+  padding: 1rem .7rem;
+  text-align: center;
+  transition: background .25s;
+}
+.plate:hover { background: var(--bone); }
+.plate__n {
+  font-family: var(--display);
+  font-size: clamp(1.7rem, 3.9vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--blood);
+  font-variant-numeric: tabular-nums;
+}
+.plate__l {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: rgba(26, 22, 20, .66);
+  margin-top: .4rem;
+}
+
+/* A short descending mark under the plates: an invitation, not a label.
+   It sits in the hero's own bottom padding so it can never collide. */
+.scrollcue {
+  position: absolute;
+  bottom: .7rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+}
+.scrollcue__line {
+  width: 2px; height: 26px;
+  background: linear-gradient(rgba(26, 22, 20, .38), transparent);
+  animation: cue 2.2s ease-in-out infinite;
+}
+@keyframes cue {
+  0%, 100% { opacity: .35; transform: scaleY(.45); transform-origin: top; }
+  50%      { opacity: 1;   transform: scaleY(1);   transform-origin: top; }
+}
+
+/* ─────────────────────────── CHAPTERS ─────────────────────────── */
+.ch {
+  position: relative;
+  padding: clamp(4.5rem, 11vh, 8.5rem) 0;
+  overflow: hidden;
+}
+
+.chtitle {
+  max-width: 62ch;
+  margin-bottom: clamp(2.6rem, 6vw, 4.4rem);
+}
+.chtitle--center { margin-inline: auto; text-align: center; }
+
+.chtitle__num {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--blood);
+  padding-bottom: .6rem;
+  margin-bottom: 1rem;
+  border-bottom: 3px solid var(--blood);
+}
+
+.chtitle__h {
+  font-family: var(--display);
+  font-size: var(--t-h2);
+  font-weight: 700;
+  line-height: .95;
+  letter-spacing: -.01em;
+  margin-bottom: 1.1rem;
+}
+.chtitle__sub {
+  font-size: var(--t-lead);
+  line-height: 1.72;
+  color: var(--fg-dim);
+  max-width: 58ch;
+}
+.chtitle--center .chtitle__sub { margin-inline: auto; }
+.chtitle__sub b { color: var(--gild); font-weight: 700; }
+.chtitle__sub em { color: var(--blood); font-style: italic; font-weight: 500; }
+.chtitle__note {
+  display: block;
+  margin-top: .9rem;
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: .04em;
+  color: var(--fg-faint);
+}
+
+/* ───────────────── CHAPTER I · THE LEDGER ───────────────── */
+.ledger {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.4rem, 5vw, 4rem);
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: clamp(1.5rem, 4vw, 3.4rem);
+}
+
+.entry__when {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  align-self: start;
+  padding-top: .5rem;
+}
+.entry__when time {
+  font-family: var(--mono);
+  font-size: .74rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--gild);
+  line-height: 1.5;
+}
+.entry__dot {
+  flex: none;
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  background: var(--blood);
+  border: 3px solid var(--ink-deep);
+  box-shadow: 0 0 0 2px var(--blood);
+}
+
+.entry__body {
+  border-left: 2px dashed var(--line);
+  padding-left: clamp(1.2rem, 3vw, 2.4rem);
+}
+.entry__head { margin-bottom: 1.1rem; }
+.entry__head h3 {
+  font-family: var(--display);
+  font-size: var(--t-h3);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--fg);
+}
+.entry__org {
+  font-family: var(--mono);
+  font-size: .82rem;
+  letter-spacing: .05em;
+  color: var(--blood);
+  margin-top: .3rem;
+}
+.entry__org span { color: var(--fg-faint); }
+
+.entry__lede {
+  font-size: var(--t-lead);
+  line-height: 1.75;
+  color: var(--fg-dim);
+  max-width: 66ch;
+  margin-bottom: 1.6rem;
+}
+
+.entry__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+}
+.entry__col h4 { margin-top: 0; }
+
+/* Rites: the bulleted list with daggers */
+.rites { display: flex; flex-direction: column; gap: .8rem; }
+.rites li {
+  position: relative;
+  padding-left: 1.7rem;
+  font-size: .97rem;
+  line-height: 1.68;
+  color: var(--fg-dim);
+}
+.rites li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .42em;
+  width: 11px; height: 11px;
+  background: var(--blood);
+  transform: rotate(45deg);
+  border: 2px solid var(--fg-faint);
+}
+.rites li b { color: var(--fg); font-weight: 700; }
+.rites--cert li::before { background: var(--gild); }
+
+/* Chips */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-top: 1.3rem;
+}
+.chips li {
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .05em;
+  padding: .3rem .6rem;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+.chips--tight { margin-top: 1.1rem; }
+
+/* ───────────────── CHAPTER II · THE DECK ───────────────── */
+.deck__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 2.2rem;
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid var(--line);
+}
+.deck__bar .btn--ghost { --fg: var(--ink); --fg-faint: rgba(26,22,20,.3); }
+.deck__count {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.deck__count b { color: var(--blood); font-size: 1rem; }
+
+.deck {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.4rem, 2.6vw, 2.2rem);
+  perspective: 2000px;
+}
+
+.card {
+  position: relative;
+  aspect-ratio: 5 / 7.5;
+  perspective: 1800px;
+  transform: rotate(var(--tilt, 0deg)) translateY(var(--dy, 0));
+  transition: transform .45s var(--ease);
+  cursor: pointer;
+}
+/* a dealt hand, not a spreadsheet */
+.card:nth-child(6n+1) { --tilt: -1.5deg; --dy: 6px; }
+.card:nth-child(6n+2) { --tilt:  1.2deg; --dy: -8px; }
+.card:nth-child(6n+3) { --tilt:  -.7deg; --dy: 10px; }
+.card:nth-child(6n+4) { --tilt:  1.7deg; --dy: -5px; }
+.card:nth-child(6n+5) { --tilt: -1.1deg; --dy: 9px; }
+.card:nth-child(6n+6) { --tilt:  .9deg; --dy: -3px; }
+
+.card:hover,
+.card:focus-within {
+  --tilt: 0deg;
+  --dy: -12px;
+  z-index: 5;
+}
+.card.is-flipped { --dy: 0; }
+
+/* A full-bleed button makes the whole front face the turn target. The reading's
+   own controls sit on the back face, so nothing focusable is nested in anything. */
+.card__turn {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: none;
+  border: 0;
+  border-radius: var(--r);
+  cursor: pointer;
+}
+.card__turn:focus-visible {
+  outline: 3px solid var(--gild);
+  outline-offset: -7px;
+}
+
+.card__turn-back {
+  position: absolute;
+  top: .75rem;
+  right: .8rem;
+  z-index: 3;
+  padding: .28rem .55rem;
+  background: rgba(20, 17, 16, .88);
+  border: 1.5px solid rgba(227, 169, 60, .5);
+  border-radius: 3px;
+  color: var(--gild);
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.card__turn-back:hover,
+.card__turn-back:focus-visible {
+  background: var(--blood);
+  border-color: var(--blood);
+  color: var(--bone);
+}
+
+.card__inner {
+  position: relative;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .78s var(--ease);
+}
+.card.is-flipped .card__inner { transform: rotateY(180deg); }
+
+/* Where 3D transforms aren't available the flip can't rotate, so cross-fade
+   between the two faces instead. Same reading order, same behaviour. */
+@supports not (transform-style: preserve-3d) {
+  .card__inner { transition: none; }
+  .card.is-flipped .card__inner { transform: none; }
+  .card__face {
+    transition: opacity .34s var(--ease), visibility 0s linear .34s;
+  }
+  .card__face--back { transform: none; opacity: 0; visibility: hidden; }
+  .card.is-flipped .card__face--front { opacity: 0; visibility: hidden; }
+  .card.is-flipped .card__face--back {
+    opacity: 1; visibility: visible;
+    transition: opacity .34s var(--ease), visibility 0s;
+  }
+}
+
+.card__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--r);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  box-shadow: 0 10px 0 rgba(26, 22, 20, .82), 0 22px 40px rgba(26, 22, 20, .18);
+}
+.card:hover .card__face { box-shadow: 0 14px 0 rgba(26, 22, 20, .82), 0 30px 52px rgba(26, 22, 20, .26); }
+
+/* front: parchment */
+.card__face--front {
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  padding: 1.6rem 1.4rem;
+  text-align: center;
+  background:
+    repeating-linear-gradient(45deg, rgba(26,22,20,.035) 0 2px, transparent 2px 7px),
+    var(--bone);
+  color: var(--ink);
+}
+.card__face--front::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 1.5px solid rgba(26, 22, 20, .3);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.card__num {
+  position: absolute;
+  top: 1.1rem; left: 1.3rem;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--blood);
+  z-index: 2;
+}
+
+.card__art {
+  width: 58%;
+  max-width: 165px;
+  margin-bottom: .5rem;
+  transition: transform .4s var(--ease);
+}
+.card:hover .card__art { transform: scale(1.07) rotate(-2deg); }
+.card__art svg { width: 100%; height: auto; }
+
+.card__name {
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 2.4vw, 2.05rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: .005em;
+}
+.card__arcana {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--blood-d);
+}
+.card__kicker {
+  font-size: .86rem;
+  line-height: 1.45;
+  color: rgba(26, 22, 20, .68);
+  max-width: 22ch;
+  margin-top: .2rem;
+}
+.card__hint {
+  position: absolute;
+  bottom: 1.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(26, 22, 20, .42);
+  white-space: nowrap;
+  transition: color .25s;
+}
+.card:hover .card__hint { color: var(--blood); }
+
+/* back: the reading */
+.card__face--back {
+  transform: rotateY(180deg);
+  padding: 1.5rem 1.4rem;
+  background:
+    repeating-linear-gradient(-45deg, rgba(239,231,211,.03) 0 2px, transparent 2px 7px),
+    var(--ink);
+  color: var(--bone);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.card__face--back::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 1.5px solid rgba(227, 169, 60, .3);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.card__arcana--top {
+  color: var(--gild);
+  margin-bottom: .6rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid rgba(227, 169, 60, .28);
+}
+.card__face--back .card__name {
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  color: var(--bone);
+  margin-bottom: .8rem;
+}
+.card__read {
+  font-size: .9rem;
+  line-height: 1.66;
+  color: rgba(239, 231, 211, .8);
+}
+.card__face--back .chips { margin-top: 1rem; }
+.card__face--back .chips li {
+  border-color: rgba(239, 231, 211, .22);
+  color: rgba(239, 231, 211, .72);
+  font-size: .62rem;
+  padding: .24rem .5rem;
+}
+.card__inv {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(239, 231, 211, .22);
+  font-size: .86rem;
+  line-height: 1.62;
+  color: rgba(239, 231, 211, .7);
+  font-style: italic;
+}
+.card__inv b {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--blood);
+  display: block;
+  margin-bottom: .35rem;
+}
+.card__src {
+  display: inline-block;
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gild);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+.card__src:hover { color: var(--bone); }
+
+/* scrollbar inside the reading */
+.card__face--back::-webkit-scrollbar { width: 6px; }
+.card__face--back::-webkit-scrollbar-track { background: rgba(239,231,211,.06); }
+.card__face--back::-webkit-scrollbar-thumb { background: var(--blood); border-radius: 3px; }
+
+/* shuffle animation */
+.card.is-dealing { animation: deal .55s var(--ease) backwards; }
+@keyframes deal {
+  from { opacity: 0; transform: rotate(var(--tilt, 0deg)) translateY(46px) scale(.86); }
+}
+
+/* ───────────────── CHAPTER III · THE TABLETS ───────────────── */
+.tablets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
+  gap: clamp(1.2rem, 2.4vw, 1.8rem);
+}
+
+.tablet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.5rem 1.7rem;
+  background: var(--panel);
+  border: var(--stroke) solid var(--ink);
+  border-top: 6px solid var(--tint, var(--blood));
+  border-radius: var(--r);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, .34);
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+.ch--bone .tablet { border-color: var(--ink); box-shadow: 0 8px 0 rgba(26,22,20,.24); }
+.tablet:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 0 rgba(0, 0, 0, .34);
+}
+
+.tablet__tab {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  border-bottom: 1px solid var(--line);
+}
+.tablet__tab svg {
+  width: 26px; height: 26px;
+  color: var(--tint, var(--blood));
+  flex: none;
+}
+.tablet__tab h3 {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1;
+  flex: 1 1 auto;
+}
+.tablet__sub {
+  flex: 0 0 100%;
+  font-family: var(--mono);
+  font-size: .66rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--tint, var(--blood));
+  padding-left: 2.1rem;
+}
+
+.tablet__list { display: flex; flex-direction: column; gap: .85rem; }
+.tablet__list li {
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  padding-left: .9rem;
+  border-left: 2px solid var(--tint, var(--blood));
+}
+.tablet__list b {
+  font-size: .97rem;
+  font-weight: 700;
+  color: var(--fg);
+  line-height: 1.35;
+}
+.tablet__list span {
+  font-size: .84rem;
+  line-height: 1.5;
+  color: var(--fg-dim);
+}
+
+/* Ticker */
+.scroll-ticker {
+  margin-top: clamp(2.6rem, 5vw, 4rem);
+  padding: 1rem 0;
+  border-block: 1px solid var(--line);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+}
+.scroll-ticker__track {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  width: max-content;
+  animation: ticker 46s linear infinite;
+}
+.scroll-ticker:hover .scroll-ticker__track { animation-play-state: paused; }
+.scroll-ticker__track span {
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 2.6vw, 2.1rem);
+  font-weight: 500;
+  color: var(--fg-faint);
+  white-space: nowrap;
+}
+.scroll-ticker__track i {
+  color: var(--blood);
+  font-style: normal;
+  font-size: .7rem;
+}
+@keyframes ticker { to { transform: translateX(-50%); } }
+
+/* ───────────────── CHAPTER IV · THE FAITHFUL ───────────────── */
+.faithful {
+  display: grid;
+  grid-template-columns: 1.35fr .85fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.flock__row {
+  display: flex;
+  gap: 1.2rem;
+  padding: 1.3rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.flock__row:last-of-type { border-bottom: 0; }
+.flock__face {
+  width: 58px; height: 64px;
+  flex: none;
+  transition: transform .35s var(--snap);
+}
+.flock__row:hover .flock__face { transform: translateY(-5px) rotate(-7deg); }
+.flock__row h4 {
+  font-family: var(--display);
+  font-size: var(--t-h4);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.flock__row p {
+  font-size: .95rem;
+  color: var(--fg-dim);
+  margin-top: .2rem;
+}
+.flock__row p .mono {
+  color: var(--blood);
+  padding-left: .5rem;
+}
+.flock__note {
+  font-size: .88rem !important;
+  line-height: 1.6;
+  margin-top: .45rem !important;
+  max-width: 52ch;
+}
+
+.tongues {
+  padding: 1.6rem 1.5rem;
+  background: var(--panel);
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--r);
+  box-shadow: 0 8px 0 rgba(26, 22, 20, .24);
+}
+.ch--ink .tongues { box-shadow: 0 8px 0 rgba(0, 0, 0, .34); }
+
+.tongues__list { display: flex; flex-direction: column; gap: 1.15rem; }
+.tongues__list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .3rem .8rem;
+  align-items: baseline;
+}
+.tongues__name {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.tongues__lvl {
+  font-size: .62rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  grid-column: 2;
+  grid-row: 1;
+}
+.tongues__bar {
+  grid-column: 1 / -1;
+  height: 8px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.tongues__bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--blood), var(--gild));
+  border-radius: 999px;
+  transition: width 1.2s var(--ease);
+}
+.tongues.is-lit .tongues__bar i { width: var(--w); }
+
+.tongues__card {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin-top: 1.6rem;
+  padding-top: 1.3rem;
+  border-top: 1px dashed var(--line);
+}
+.tongues__coin { width: 24px; height: 24px; flex: none; }
+.tongues__card p { font-size: .88rem; color: var(--fg-dim); }
+.tongues__card b { color: var(--fg); }
+
+/* ───────────────── CHAPTER V · THE RITE ───────────────── */
+.ch--final { padding-bottom: clamp(6rem, 14vh, 10rem); }
+
+.rite {
+  position: relative;
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.rite__circle {
+  position: absolute;
+  top: -30px; left: 50%;
+  width: min(560px, 120%);
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  color: var(--blood);
+  opacity: .13;
+  pointer-events: none;
+}
+.rite__circle svg { width: 100%; height: 100%; animation: slowSpin 200s linear infinite reverse; }
+
+.rite__links {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(212px, 1fr));
+  gap: .7rem;
+}
+.rite__links li {
+  background: var(--ink-2);
+  border: 2px solid rgba(227, 169, 60, .42);
+  border-radius: var(--r);
+  transition: border-color .25s;
+}
+.rite__links li:hover { border-color: var(--gild); }
+.rite__links a,
+.rite__row {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  padding: 1.25rem 1.4rem;
+  text-decoration: none;
+  height: 100%;
+  transition: background .25s;
+}
+.rite__links a:hover { background: var(--blood); }
+.rite__k {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gild);
+  transition: color .25s;
+}
+.rite__v {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--bone);
+  word-break: break-word;
+}
+.rite__links a:hover .rite__k { color: rgba(239, 231, 211, .8); }
+
+.rite__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .9rem;
+  justify-content: center;
+  margin-top: 2.6rem;
+}
+
+/* ────────────────────────── GROUNDS ────────────────────────── */
+.grounds {
+  position: relative;
+  background: #0E0C0B;
+  border-top: 3px solid var(--gild);
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.grounds__walk {
+  position: relative;
+  /* tall enough for the tallest follower (58px wide, 110/100 aspect) plus a
+     three line bubble above its head. The bubble is clipped, not scrolled,
+     so this has to clear the worst case rather than the common one. */
+  height: 156px;
+  border-bottom: 1px solid rgba(239, 231, 211, .1);
+  overflow: hidden;
+}
+.grounds__walk::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, rgba(227,169,60,.3) 0 12px, transparent 12px 26px);
+}
+
+.walker {
+  position: absolute;
+  bottom: 0;
+  width: 46px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform .2s var(--snap);
+  will-change: transform;
+}
+.walker svg {
+  width: 100%;
+  height: auto;
+  transform-origin: bottom center;
+  /* turning is done on the drawing alone. Mirroring .walker would reverse
+     the speech bubble's text along with it. */
+  transform: scaleX(var(--flip, 1));
+  transition: transform .22s var(--snap);
+}
+.walker:hover svg,
+.walker:focus-visible svg {
+  transform: scaleX(var(--flip, 1)) scale(1.18) translateY(-6px);
+}
+.walker__bubble {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  /* --shift is set per hover so a bubble near an edge slides back inside the
+     walk instead of being cut off by it. It rides on left, not transform,
+     because transform is transitioned: a follower carrying an open bubble
+     keeps walking, and a 220ms-eased clamp would trail behind it. */
+  left: calc(50% + var(--shift, 0px));
+  transform: translateX(-50%) translateY(6px);
+  width: max-content;
+  max-width: min(260px, 70vw);
+  padding: .6rem .8rem;
+  background: var(--bone);
+  color: var(--ink);
+  border: 2.5px solid var(--ink);
+  border-radius: var(--r);
+  font-family: var(--mono);
+  font-size: .68rem;
+  line-height: 1.5;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s, transform .22s;
+}
+.walker__bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: calc(50% + var(--arrow, 0px));
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-top-color: var(--ink);
+}
+.walker:hover .walker__bubble,
+.walker.is-talking .walker__bubble {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.walker.is-hopping svg { animation: hop .42s var(--snap); }
+@keyframes hop {
+  0%, 100% { transform: scaleX(var(--flip, 1)) translateY(0) scaleY(1); }
+  35%      { transform: scaleX(var(--flip, 1)) translateY(-16px) scaleY(1.08); }
+  70%      { transform: scaleX(var(--flip, 1)) translateY(0) scaleY(.92); }
+}
+.grounds.is-hidden .grounds__walk { display: none; }
+
+.grounds__meta {
+  padding: 3.4rem 0 2.6rem;
+  text-align: center;
+}
+.grounds__crown {
+  width: 76px;
+  height: 60px;
+  margin: 0 auto 1.4rem;
+  color: var(--ink);
+  animation: crownFloat 7s ease-in-out infinite;
+}
+.grounds__line {
+  max-width: 46ch;
+  margin: 0 auto 1.4rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(239, 231, 211, .72);
+}
+.grounds__hint {
+  font-size: .9rem;
+  color: rgba(239, 231, 211, .5);
+  margin-bottom: 1.8rem;
+}
+.grounds__hint .mono {
+  display: block;
+  font-size: .68rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gild);
+  margin-bottom: .5rem;
+}
+.grounds__hint kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  margin-inline: 1px;
+  padding: .15em .3em;
+  background: var(--ink-2);
+  border: 1.5px solid var(--gild);
+  border-bottom-width: 3px;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: .78em;
+  color: var(--gild);
+}
+.grounds__fine {
+  font-size: .68rem;
+  letter-spacing: .08em;
+  color: rgba(239, 231, 211, .34);
+}
+
+/* ─────────────────────── THE REVELATION ─────────────────────── */
+.reveal-egg {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(10, 8, 8, .93);
+  backdrop-filter: blur(6px);
+  animation: fadeIn .35s var(--ease);
+}
+.reveal-egg[hidden] { display: none; }
+@keyframes fadeIn { from { opacity: 0; } }
+
+.reveal-egg__penta {
+  position: absolute;
+  width: min(120vh, 120vw);
+  aspect-ratio: 1;
+  color: var(--blood);
+  opacity: .3;
+  animation: slowSpin 26s linear infinite;
+  pointer-events: none;
+}
+
+.reveal-egg__box {
+  position: relative;
+  max-width: 520px;
+  padding: 2.6rem 2rem 2.2rem;
+  text-align: center;
+  background: var(--ink-2);
+  border: 3px solid var(--gild);
+  border-radius: var(--r);
+  box-shadow: 0 0 90px rgba(208, 64, 44, .45);
+  animation: eggIn .5s var(--snap);
+}
+@keyframes eggIn {
+  from { opacity: 0; transform: scale(.82) translateY(24px); }
+}
+.reveal-egg__crown {
+  width: 108px;
+  height: 86px;
+  margin: 0 auto 1.2rem;
+  color: var(--ink);
+}
+.reveal-egg__box h2 {
+  font-family: var(--display);
+  font-size: clamp(1.9rem, 5vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--blood);
+  margin-bottom: 1rem;
+}
+.reveal-egg__box p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(239, 231, 211, .78);
+  margin-bottom: 1.2rem;
+}
+.reveal-egg__stat {
+  font-size: .74rem !important;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gild) !important;
+}
+.reveal-egg__stat span { color: var(--bone); }
+
+/* ink burst on click */
+.burst {
+  position: fixed;
+  z-index: 9998;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--blood);
+  pointer-events: none;
+}
+.burst--gold { background: var(--gild); }
+
+/* ─────────────────────── SCROLL REVEAL ─────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .75s var(--ease), transform .75s var(--ease);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ──────────────────────── RESPONSIVE ──────────────────────── */
+@media (min-width: 1240px) {
+  .rail { display: flex; }
+  .wrap { width: min(var(--wrap), 100% - 9rem); margin-left: max(6.5rem, calc((100% - var(--wrap)) / 2)); }
+}
+
+@media (max-width: 1080px) {
+  .nav__links span { display: none; }
+  .nav__links a { padding: .5rem .55rem; }
+  .faithful { grid-template-columns: 1fr; }
+  .deck { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .entry { grid-template-columns: 1fr; gap: 1rem; }
+  .entry__when { padding-top: 0; }
+  .entry__body { border-left: 0; padding-left: 0; }
+}
+
+@media (max-width: 780px) {
+  :root { --nav-h: 62px; }
+  .nav { gap: .8rem; }
+  .nav__links { display: none; }
+  .nav__name { font-size: 1.25rem; }
+  .nav__cv { padding: .45rem .7rem; font-size: .62rem; letter-spacing: .06em; }
+  .hero { min-height: auto; padding-top: calc(var(--nav-h) + 2.6rem); }
+  .hero__name-l2 { text-shadow: 3px 3px 0 var(--ink); }
+  .plates { grid-template-columns: repeat(2, 1fr); }
+  .deck { grid-template-columns: 1fr; }
+  .card { aspect-ratio: 5 / 7; }
+  .card__face--back { padding: 1.3rem 1.15rem; }
+  .tablets { grid-template-columns: 1fr; }
+  .rite__circle { opacity: .09; }
+  .reveal-egg__box { padding: 2rem 1.3rem 1.8rem; }
+}
+
+@media (max-width: 520px) {
+  /* the role reads as three stacked lines rather than wrapping mid-phrase */
+  .hero__role {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    letter-spacing: .12em;
+  }
+  .hero__role i { display: none; }
+  .eyebrow { letter-spacing: .18em; gap: .6rem; }
+}
+
+@media (max-width: 460px) {
+  .hero__cta { flex-direction: column; }
+  .hero__cta .btn { width: 100%; }
+  .deck__count { margin-left: 0; flex-basis: 100%; }
+  .rite__cta { flex-direction: column; }
+  .rite__cta .btn { width: 100%; }
+  .nav__name { font-size: 1.1rem; }
+}
+
+/* ══════════════ CHAPTER V · THE TRIALS ══════════════
+   Two recorded pipelines, replayed. The components here are instruments, not
+   decoration: the conversation map is drawn from real segment timestamps, and
+   the step cascade prints the values the pipeline actually returned.
+   ──────────────────────────────────────────────────────────────── */
+
+.terms {
+  max-width: 74ch;
+  padding: 1.5rem 1.6rem 1.4rem;
+  margin-bottom: clamp(2.4rem, 5vw, 3.6rem);
+  background: var(--panel);
+  border: var(--stroke) solid var(--ink);
+  border-left: 6px solid var(--gild);
+  border-radius: var(--r);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, .34);
+}
+.terms .minih { margin-bottom: .8rem; }
+.terms p { color: var(--fg-dim); }
+.terms p + p { margin-top: .9rem; }
+.terms b { color: var(--gild); }
+.terms em { color: var(--blood); font-style: italic; }
+.terms__fine {
+  font-size: var(--t-micro) !important;
+  line-height: 1.7;
+  letter-spacing: .02em;
+  color: var(--fg-faint) !important;
+  padding-top: .9rem;
+  border-top: 1px dashed var(--line);
+}
+
+.trial {
+  position: relative;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  background: var(--panel);
+  border: var(--stroke) solid var(--ink);
+  border-top: 6px solid var(--tint, var(--blood));
+  border-radius: var(--r);
+  box-shadow: 0 10px 0 rgba(0, 0, 0, .34);
+}
+
+.trial__head { max-width: 76ch; margin-bottom: 1.7rem; }
+.trial__num {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--tint, var(--blood));
+  margin-bottom: .55rem;
+}
+.trial__h {
+  font-family: var(--display);
+  font-size: var(--t-h3);
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: .75rem;
+}
+.trial__sub { color: var(--fg-dim); font-size: var(--t-lead); line-height: 1.7; }
+.trial__sub em { color: var(--fg); font-style: italic; }
+
+/* Provenance. A trial that computes a number says so; a trial that invents a
+   corpus says that instead. The rule beside it is the tint of the trial, so a
+   reader skimming can tell which kind of evidence they are looking at. */
+.trial__src {
+  margin-top: 1rem;
+  padding: .85rem .95rem;
+  font-size: .87rem;
+  line-height: 1.7;
+  color: var(--fg-dim);
+  background: var(--ink-deep);
+  border-left: 3px solid var(--tint, var(--gild));
+  border-radius: var(--r);
+}
+.trial__src b {
+  display: inline-block;
+  margin-right: .4rem;
+  color: var(--tint, var(--gild));
+  font-family: var(--mono);
+  font-size: .66rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+/* ── the live tag ── */
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  padding: .22rem .5rem;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  vertical-align: middle;
+}
+.tag--live { color: var(--gild); }
+.tag--live::before {
+  content: "";
+  display: inline-block;
+  width: 5px; height: 5px;
+  margin-right: .4rem;
+  border-radius: 50%;
+  background: currentColor;
+  animation: tick 2.4s var(--ease) infinite;
+}
+@keyframes tick { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+
+/* ── TRIAL I · the sigil ── */
+.sigil {
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  gap: clamp(1.2rem, 2.4vw, 2rem);
+  align-items: start;
+}
+
+/* The rail is short and the cascade beside it is long. Sticking the rail keeps
+   the plates in reach while you read the readout, which is the whole loop:
+   pick a plate, read it, pick the next. */
+.sigil__rail { min-width: 0; position: sticky; top: 88px; }
+.sigil__rail .minih { margin-bottom: .7rem; }
+.sigil__plates { display: flex; flex-direction: column; gap: .45rem; }
+
+.plate {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  align-items: center;
+  gap: .7rem;
+  padding: .45rem .55rem;
+  background: var(--ink-deep);
+  border: 2px solid var(--line);
+  border-radius: var(--r);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  transition: border-color .2s var(--ease), transform .2s var(--ease);
+}
+.plate:hover { border-color: var(--gild); transform: translateX(3px); }
+.plate img {
+  /* the previews are the point of the rail: at 46px a plate is a grey smudge,
+     at 74px you can see the plate and how badly it is shot */
+  width: 74px; height: 27px;
+  object-fit: cover;
+  border-radius: 2px;
+  filter: saturate(.7);
+}
+.plate__id {
+  display: block;
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .06em;
+  color: var(--fg);
+}
+.plate__pose {
+  display: block;
+  font-size: .74rem;
+  line-height: 1.35;
+  color: var(--fg-faint);
+}
+.plate[aria-pressed="true"] {
+  border-color: var(--gild);
+  background: rgba(227, 169, 60, .1);
+}
+.plate[aria-pressed="true"] .plate__pose { color: var(--fg-dim); }
+
+.sigil__tally {
+  margin-top: .8rem;
+  font-size: var(--t-micro);
+  line-height: 1.7;
+  letter-spacing: .02em;
+  color: var(--fg-faint);
+}
+
+.sigil__stage { min-width: 0; }
+.sigil__plate { margin-bottom: 1.2rem; }
+.sigil__frame {
+  position: relative;
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--r);
+  background: var(--ink-deep);
+  overflow: hidden;
+  line-height: 0;
+}
+.sigil__frame img { display: block; width: 100%; height: auto; }
+.sigil__box {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.sigil__cap {
+  display: block;
+  margin-top: .55rem;
+  font-size: var(--t-micro);
+  letter-spacing: .04em;
+  color: var(--fg-faint);
+}
+
+/* ── the step cascade ── */
+.steps { list-style: none; padding: 0; margin: 0 0 1.1rem; }
+.step {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: .85rem;
+  padding: .6rem 0;
+  border-top: 1px solid var(--line);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .4s var(--ease), transform .4s var(--ease);
+  transition-delay: calc(var(--i, 0) * 110ms);
+}
+.step.is-on { opacity: 1; transform: none; }
+.step:first-child { border-top: 0; }
+.step__n {
+  font-family: var(--mono);
+  font-size: .68rem;
+  line-height: 1.5;
+  color: var(--tint, var(--gild));
+}
+.step__k {
+  display: block;
+  font-family: var(--mono);
+  font-size: .66rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: .2rem;
+}
+.step__v {
+  display: block;
+  font-family: var(--mono);
+  font-size: .82rem;
+  line-height: 1.5;
+  color: var(--fg);
+  word-break: break-word;
+}
+.step__d {
+  display: block;
+  margin-top: .28rem;
+  font-size: .82rem;
+  line-height: 1.55;
+  color: var(--fg-dim);
+}
+.step__d b { color: var(--fg); font-weight: 600; }
+
+.pill {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .14rem .42rem;
+  border-radius: 3px;
+  border: 2px solid currentColor;
+}
+.pill--ok { color: #9FBE6A; }
+.pill--warn { color: var(--gild); }
+.pill--bad { color: var(--blood); }
+
+.sigil__verdict {
+  margin-top: .85rem;
+  font-size: .88rem;
+  line-height: 1.6;
+  color: var(--fg-dim);
+  min-height: 1.4em;
+}
+.sigil__verdict b { color: var(--fg); }
+.sigil__verdict .hit { color: #9FBE6A; font-weight: 600; }
+.sigil__verdict .miss { color: var(--blood); font-weight: 600; }
+
+/* ── the repair, live ── */
+.forge {
+  margin-top: clamp(1.4rem, 3vw, 2rem);
+  padding-top: 1.5rem;
+  border-top: 3px dashed var(--line);
+}
+.forge__head {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  flex-wrap: wrap;
+  margin-bottom: .8rem;
+}
+.forge__head .minih { margin: 0; }
+.forge p { max-width: 76ch; color: var(--fg-dim); }
+.forge p em { color: var(--gild); font-style: italic; }
+
+.forge__row {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+  margin: 1.1rem 0 .2rem;
+}
+.forge__in {
+  flex: 1 1 20rem;
+  min-width: 0;
+  padding: .7rem .85rem;
+  font-size: .95rem;
+  letter-spacing: .08em;
+  color: var(--fg);
+  background: var(--ink-deep);
+  border: var(--stroke) solid var(--line);
+  border-radius: var(--r);
+}
+.forge__in:focus-visible { border-color: var(--gild); outline: 2px solid var(--gild); outline-offset: 2px; }
+
+.forge__out { margin-top: 1rem; }
+.forge__out:empty { display: none; }
+
+.verdict {
+  display: flex;
+  align-items: baseline;
+  gap: .7rem;
+  flex-wrap: wrap;
+  padding: .8rem 1rem;
+  border-radius: var(--r);
+  border: 2px solid var(--line);
+  background: var(--ink-deep);
+}
+.verdict--ok { border-color: #9FBE6A; }
+.verdict--bad { border-color: var(--blood); }
+.verdict__word {
+  font-family: var(--mono);
+  font-size: .74rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.verdict--ok .verdict__word { color: #9FBE6A; }
+.verdict--bad .verdict__word { color: var(--blood); }
+.verdict__msg { font-size: .95rem; color: var(--fg); }
+.verdict__msg code {
+  font-family: var(--mono);
+  font-size: .95em;
+  letter-spacing: .06em;
+  color: var(--gild);
+  word-break: break-all;
+}
+
+.repair__steps { list-style: none; padding: 0; margin: .9rem 0 0; }
+.repair__steps li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .8rem;
+  padding: .5rem 0;
+  border-top: 1px solid var(--line);
+  font-size: .86rem;
+  align-items: baseline;
+}
+.repair__steps .mono { color: var(--fg); letter-spacing: .06em; word-break: break-all; }
+.repair__steps .repair__r { color: var(--fg-dim); text-align: right; }
+.repair__steps .repair__r.is-ok { color: #9FBE6A; }
+.repair__steps .repair__r.is-bad { color: var(--blood); }
+
+.forge__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: .6rem;
+  margin-top: 1rem;
+}
+.fact {
+  padding: .6rem .7rem;
+  background: var(--ink-deep);
+  border: 2px solid var(--line);
+  border-radius: var(--r);
+}
+.fact__k {
+  display: block;
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: .25rem;
+}
+.fact__v {
+  display: block;
+  font-family: var(--mono);
+  font-size: .86rem;
+  color: var(--fg);
+  /* A VIN has no spaces, so long strings must be allowed to break. Ordinary
+     words must not: break-word sends a word to the next line before it
+     splits it mid-syllable, which break-all would do to "table". */
+  overflow-wrap: break-word;
+}
+.fact__v.is-dim { color: var(--fg-faint); }
+
+/* ── bring your own file ──
+   One panel per trial, for a file the visitor supplies. It reuses the
+   forge's fact cards and verdict block, so a reading of your own plate
+   is presented exactly like a reading of the corpus. */
+.bring {
+  margin-top: clamp(1.4rem, 3vw, 2rem);
+  padding-top: 1.5rem;
+  border-top: 3px dashed var(--line);
+}
+.bring__head {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  flex-wrap: wrap;
+  margin-bottom: .8rem;
+}
+.bring__head .minih { margin: 0; }
+.bring p { max-width: 76ch; color: var(--fg-dim); }
+.bring__gap { font-size: .88rem; color: var(--fg-dim); }
+.bring__gap b { color: var(--fg); }
+
+.tag--run { color: #9FBE6A; }
+.tag--run::before {
+  content: "";
+  display: inline-block;
+  width: 6px; height: 6px;
+  margin-right: .4rem;
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: middle;
+}
+
+.bring__drop {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  margin-top: 1.2rem;
+  padding: 1.15rem 1.25rem;
+  border: 3px dashed var(--line);
+  border-radius: var(--r);
+  background: var(--panel);
+  cursor: pointer;
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.bring__drop:hover { border-color: var(--gild); }
+.bring__drop.is-over { border-color: var(--gild); background: var(--panel-2); }
+.bring__drop:focus-within { border-color: var(--gild); outline: 2px solid var(--gild); outline-offset: 2px; }
+.bring__ico { width: 28px; height: 28px; flex: 0 0 auto; color: var(--gild); }
+.bring__drop-k { font-size: 1rem; color: var(--fg); }
+.bring__drop-s { font-size: .68rem; color: var(--fg-faint); letter-spacing: .04em; }
+
+.bring__body {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: clamp(1.1rem, 2.4vw, 1.6rem);
+  margin-top: 1.4rem;
+  align-items: start;
+}
+.bring__body[hidden] { display: none; }
+.bring__fig { margin: 0; }
+.bring__fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 3px solid var(--line);
+  border-radius: var(--r);
+  background: var(--ink-deep);
+}
+.bring__cap {
+  margin-top: .55rem;
+  font-size: .68rem;
+  letter-spacing: .05em;
+  color: var(--fg-faint);
+  overflow-wrap: break-word;
+}
+.bring__side { min-width: 0; }
+.bring__k {
+  margin: 0 0 .65rem;
+  font-family: var(--mono);
+  font-size: .68rem;
+  font-weight: 400;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+.bring__side .bring__k + * { margin-top: 0; }
+.bring__side > * + .bring__k { margin-top: 1.5rem; }
+
+.bring__ta {
+  display: block;
+  width: 100%;
+  min-height: 5.2rem;
+  padding: .7rem .85rem;
+  font-family: var(--body);
+  font-size: .95rem;
+  line-height: 1.55;
+  color: var(--fg);
+  background: var(--ink-deep);
+  border: var(--stroke) solid var(--line);
+  border-radius: var(--r);
+  resize: vertical;
+}
+.bring__ta:focus-visible { border-color: var(--gild); outline: 2px solid var(--gild); outline-offset: 2px; }
+.bring__lbl {
+  display: block;
+  margin-bottom: .35rem;
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .1em;
+  color: var(--fg-dim);
+}
+.bring__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.2rem; }
+.bring__pair > div { min-width: 0; }
+
+.bring__wave {
+  display: block;
+  width: 100%;
+  height: 116px;
+  border: 2px solid var(--line);
+  border-radius: var(--r);
+  background: var(--ink-deep);
+}
+
+/* The recording panel is one column: a waveform wants the full measure, and
+   the pair of transcripts below it needs the width more than a second column
+   would need the height. */
+.bring__body--wide { grid-template-columns: minmax(0, 1fr); }
+.bring__figure { margin: 0; }
+
+/* A placeholder has to be unmistakably not a value. Both bring-your-own panels
+   depend on it: "leave either blank and the rule skips that condition" only
+   works if a visitor can see at a glance that the example in the box is not
+   something they typed. Recessed in colour and set in italic, so the
+   difference survives a greyscale print or a colour-blind reader. */
+::placeholder {
+  color: var(--fg-faint);
+  font-style: italic;
+  opacity: 1;
+}
+
+/* The stage list in the gate panel. It borrows the readout's list idiom so a
+   visitor's file is annotated exactly like a plate from the corpus, but each
+   line carries a reason under it, because two of the seven stages cannot run
+   in a browser and that has to be legible rather than implied. */
+.bring__gate { margin-bottom: .3rem; }
+.bring__gate .fact__v.mono { letter-spacing: 0; }
+.bring__stages li { align-items: start; }
+.bring__stages .repair__r { display: block; max-width: 44ch; }
+.bring__why {
+  display: block;
+  margin-top: .3rem;
+  font-family: var(--body);
+  font-size: .74rem;
+  letter-spacing: 0;
+  line-height: 1.45;
+  color: var(--fg-faint);
+}
+.bring__gap.is-bad { color: var(--blood); }
+
+@media (max-width: 860px) {
+  .bring__body { grid-template-columns: 1fr; }
+  .bring__drop { flex-wrap: wrap; }
+  .bring__drop-s { flex-basis: 100%; }
+}
+@media (max-width: 560px) {
+  .bring__stages li { grid-template-columns: 1fr; gap: .15rem; }
+  .bring__stages .repair__r { max-width: none; text-align: left; }
+  .bring__pair { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .bring__pair { grid-template-columns: 1fr; }
+}
+
+/* ── TRIAL II · the confession ── */
+.conf {
+  display: grid;
+  grid-template-columns: 236px 1fr;
+  gap: clamp(1.2rem, 2.4vw, 2rem);
+  align-items: start;
+}
+.conf__col { min-width: 0; position: sticky; top: 88px; }
+.conf__col .minih { margin-bottom: .7rem; }
+/* The audit column is a long stack: the map, then the ledger, then the
+   scores. Its headings divide that stack, so they want air above them. */
+.conf__audit .minih { margin-top: 1.9rem; }
+.conf__list { display: flex; flex-direction: column; gap: .45rem; }
+
+.call {
+  display: block;
+  width: 100%;
+  padding: .55rem .65rem;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: var(--ink-deep);
+  border: 2px solid var(--line);
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: border-color .2s var(--ease), transform .2s var(--ease);
+}
+.call:hover { border-color: var(--blood); transform: translateX(3px); }
+.call__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .3rem;
+}
+.call__id {
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .06em;
+  color: var(--fg);
+}
+.call__out {
+  font-size: .74rem;
+  line-height: 1.35;
+  color: var(--fg-dim);
+}
+.call__meta {
+  display: block;
+  margin-top: .35rem;
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .04em;
+  color: var(--fg-faint);
+}
+.call__meta .is-flag { color: var(--blood); }
+.call[aria-pressed="true"] {
+  border-color: var(--blood);
+  background: rgba(208, 64, 44, .1);
+}
+.call[aria-pressed="true"] .call__out { color: var(--fg); }
+
+.conf__audit { min-width: 0; }
+
+.conf__meta {
+  padding: 1rem 1.1rem;
+  margin-bottom: 1.1rem;
+  background: var(--ink-deep);
+  border: 2px solid var(--line);
+  border-radius: var(--r);
+}
+.conf__out {
+  display: flex;
+  align-items: baseline;
+  gap: .7rem;
+  flex-wrap: wrap;
+  margin-bottom: .5rem;
+}
+.conf__out h4 {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.conf__sum { font-size: .92rem; line-height: 1.6; color: var(--fg-dim); }
+
+/* the conversation map */
+.cmap { margin: 0 0 1.1rem; }
+.cmap__svg {
+  display: block;
+  width: 100%;
+  /* 760 units of viewBox at a 700px floor is a scale of 0.92 at worst, which
+     keeps the ten-pixel tick labels above nine pixels on screen. Above that
+     width the floor does nothing and width:100% governs. */
+  min-width: 700px;
+  height: auto;
+  /* the frame lives on .cmap__scroll, which does not scroll */
+  background: var(--ink-deep);
+  border: 0;
+  border-radius: 0;
+}
+/* The map is drawn in a 760-unit viewBox. Scaled into a phone column that is
+   0.4, so its nine-pixel labels would land at under four pixels and the
+   timings would be unreadable. Below the size where it stops being legible
+   the map keeps its scale and scrolls sideways instead; the ledger
+   underneath carries every segment in text either way. The frame stays on
+   the scroll box, so it does not slide away with the content. */
+.cmap__scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: var(--ink-deep);
+  border: 2px solid var(--line);
+  border-radius: var(--r);
+}
+.cmap__scroll::-webkit-scrollbar { height: 8px; }
+.cmap__scroll::-webkit-scrollbar-track { background: transparent; }
+.cmap__scroll::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 999px;
+}
+.cmap__scroll { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+
+.cmap__svg text {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+}
+.cmap__svg .cmap__lane { fill: var(--fg-faint); font-size: 11px; letter-spacing: .18em; }
+.cmap__svg .cmap__tick { fill: var(--fg-faint); font-size: 10px; }
+.cmap__svg .cmap__bar { transition: opacity .2s var(--ease); }
+.cmap__svg .cmap__bar.is-hi { opacity: 1; }
+.cmap__svg .cmap__bar.is-dim { opacity: .32; }
+.cmap__svg .cmap__lang { fill: var(--bone); font-size: 9px; letter-spacing: .04em; }
+.cmap figcaption {
+  margin-top: .6rem;
+  font-size: .8rem;
+  line-height: 1.6;
+  color: var(--fg-faint);
+}
+
+/* the segment ledger */
+.segs { list-style: none; padding: 0; margin: 0 0 1.1rem; }
+.seg {
+  display: grid;
+  grid-template-columns: 26px 54px 1fr;
+  gap: .7rem;
+  padding: .6rem 0;
+  border-top: 1px solid var(--line);
+  transition: background .2s var(--ease);
+}
+.seg:first-child { border-top: 0; }
+.seg.is-hi { background: rgba(239, 231, 211, .05); }
+.seg__n {
+  font-family: var(--mono);
+  font-size: .66rem;
+  color: var(--fg-faint);
+  padding-top: .18rem;
+}
+.seg__spk {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  padding-top: .22rem;
+}
+.seg--client .seg__spk { color: var(--gild); }
+.seg__text { font-size: .95rem; line-height: 1.55; }
+.seg.is-dropped .seg__text { text-decoration: line-through; text-decoration-color: var(--blood); color: var(--fg-faint); }
+.seg__meta {
+  display: flex;
+  gap: .55rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: .35rem;
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .03em;
+  color: var(--fg-faint);
+}
+.seg__meta .is-flag { color: var(--blood); }
+.seg__meta .is-lang { color: var(--bone); background: var(--ritual); padding: .1rem .35rem; border-radius: 3px; }
+
+.conf__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(122px, 1fr));
+  gap: .55rem;
+}
+.metric {
+  padding: .65rem .7rem;
+  background: var(--panel-2);
+  border: 2px solid var(--line);
+  border-radius: var(--r);
+}
+.metric__k {
+  display: block;
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: .3rem;
+}
+.metric__v {
+  display: block;
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--fg);
+}
+.metric__v small { font-size: .62rem; letter-spacing: .04em; color: var(--fg-faint); }
+.metric__v.is-dim { color: var(--fg-faint); font-size: .8rem; }
+
+/* the artefact */
+.artefact, .corpus {
+  margin-top: clamp(1.4rem, 3vw, 2rem);
+  padding-top: 1.5rem;
+  border-top: 3px dashed var(--line);
+}
+.artefact .minih, .corpus .minih { margin-bottom: .8rem; }
+.artefact > p, .corpus > p { max-width: 76ch; color: var(--fg-dim); }
+.artefact > p em { color: var(--blood); font-style: italic; }
+
+.artefact__rows { list-style: none; padding: 0; margin: 1.1rem 0 0; }
+.artefact__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .35rem;
+  padding: .7rem .9rem;
+  margin-bottom: .5rem;
+  background: var(--ink-deep);
+  border: 2px solid var(--blood);
+  border-radius: var(--r);
+}
+.artefact__head {
+  display: flex;
+  gap: .7rem;
+  flex-wrap: wrap;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: .64rem;
+  letter-spacing: .06em;
+  color: var(--fg-faint);
+}
+.artefact__head .is-id { color: var(--blood); }
+.artefact__quote {
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--fg);
+  font-style: italic;
+}
+.artefact__nums {
+  font-family: var(--mono);
+  font-size: .64rem;
+  letter-spacing: .03em;
+  color: var(--fg-dim);
+}
+.artefact__close { margin-top: 1rem; }
+.artefact__close b { color: var(--gild); }
+
+.corpus__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(146px, 1fr));
+  gap: .6rem;
+  margin: 1.1rem 0 1.1rem;
+}
+.corpus__stats > div {
+  padding: .7rem .8rem;
+  background: var(--panel-2);
+  border: 2px solid var(--line);
+  border-radius: var(--r);
+}
+.corpus__stats dt {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: .3rem;
+}
+.corpus__stats dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 1.02rem;
+  line-height: 1.25;
+}
+.corpus__stats dd small { display: block; font-size: .6rem; letter-spacing: .04em; color: var(--fg-faint); margin-top: .2rem; }
+.corpus__note { font-size: .9rem; line-height: 1.65; color: var(--fg-dim); max-width: 76ch; }
+.corpus__note b { color: var(--gild); font-family: var(--mono); font-size: .92em; }
+
+/* ── trials: responsive ── */
+@media (max-width: 1000px) {
+  .sigil, .conf { grid-template-columns: 1fr; }
+  /* one column: nothing to stick it alongside */
+  .sigil__rail, .conf__col { position: static; }
+  .sigil__plates { flex-direction: row; flex-wrap: wrap; }
+  .plate { flex: 1 1 158px; grid-template-columns: 60px 1fr; }
+  .plate img { width: 60px; height: 22px; }
+  .conf__list { flex-direction: row; flex-wrap: wrap; }
+  .call { flex: 1 1 168px; }
+}
+@media (max-width: 620px) {
+  .trial { padding: 1.25rem 1.05rem; }
+  .step { grid-template-columns: 24px 1fr; gap: .6rem; }
+  .seg { grid-template-columns: 22px 1fr; }
+  .seg__spk { grid-column: 2; padding-top: 0; }
+  .seg__text { grid-column: 2; }
+  .plate { flex: 1 1 100%; }
+  .call { flex: 1 1 100%; }
+  .repair__steps li { grid-template-columns: 1fr; }
+  .repair__steps .repair__r { text-align: left; }
+}
+
+/* ─────────────────── ACCESSIBILITY / MOTION ─────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  .scroll-ticker__track { animation: none; }
+  .hero__embers, .grounds__walk { display: none; }
+  .card__inner { transition: none; }
+  .tongues__bar i { width: var(--w); }
+  /* the cascade is a reading, not a performance: show every step at once */
+  .step { opacity: 1; transform: none; transition-delay: 0s; }
+  .tag--live::before { animation: none; }
+}
+
+@media (prefers-contrast: more) {
+  .card__read, .rites li, .entry__lede { color: var(--fg); }
+  .chips li { border-color: currentColor; }
+}
+
+@media print {
+  .nav, .rail, .grounds__walk, .hero__embers, .scrollcue, .reveal-egg, .deck__bar { display: none !important; }
+  body { background: #fff; color: #000; }
+  body::after { display: none; }
+  .card { aspect-ratio: auto; }
+  .card__inner, .card.is-flipped .card__inner { transform: none; }
+  .card__face { position: static; backface-visibility: visible; box-shadow: none; }
+  .card__face--back { transform: none; page-break-inside: avoid; }
+  .reveal { opacity: 1; transform: none; }
+  /* Browsers do not print backgrounds, so an ink chapter's bone text would
+     land as pale grey on white paper. Put every chapter back to black on
+     white by resetting the tokens the whole page is built from. The ink
+     tokens go to white too, so that a reader who does switch background
+     graphics on still gets black text on white panels rather than on the
+     dark panels the screen uses. --ink itself stays black: it draws the
+     borders, and a border that vanishes is worse than one that shouts. */
+  .ch--ink, .ch--bone, body {
+    background: none !important;
+    color: #000;
+    --fg: #000; --fg-dim: #333; --fg-faint: #555;
+    --line: #bbb; --panel: #fff; --panel-2: #f2f2f2;
+    --bg: #fff; --ink: #000; --ink-2: #fff; --ink-deep: #fff;
+  }
+  /* the trials print as plain evidence: the numbers are the point */
+  .step { opacity: 1; transform: none; }
+  .cmap__svg { border-color: #999; }
+  /* the grid and the axis are drawn in translucent bone, which is invisible
+     on paper; the bars and the language ribbon keep their own fills. The
+     caller bars are bone, which is invisible on white, so they darken. */
+  .cmap__svg line { stroke: #bbb; }
+  .cmap__svg .cmap__bar[fill="#EFE7D3"] { fill: #cfc6ab; }
+  .trial { break-inside: avoid-page; border-color: #999; box-shadow: none; }
+  /* These carry their contrast in a background, which does not print.
+     Put the text back to black and keep the shape as a rule instead. */
+  .seg__meta .is-lang {
+    color: #000;
+    background: none;
+    border: 1px solid #999;
+  }
+  .tag--live, .pill--warn { color: #6A4A00; }
+  .trial__src { background: none; border-left-color: #999; }
+  .trial__src b { color: #000; }
+  /* the selected plate and call were marked by a background tint; on paper
+     the frame has to carry it instead */
+  .plate[aria-pressed="true"], .call[aria-pressed="true"] { border-color: #000; }
+}
