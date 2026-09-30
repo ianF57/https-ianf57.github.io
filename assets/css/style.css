@@ -20,8 +20,16 @@
   --ritual:  #5E4280;   /* mystic purple */
   --moss:    #5C6B3F;   /* Leshy's woods */
 
-  /* type */
-  --display: "Grenze Gotisch", "Papyrus", Georgia, serif;
+  /* type
+     The display face is Eczar, not a blackletter. Grenze Gotisch was the first
+     choice and it was wrong for the one thing the display face has to do here:
+     be read. It carried the illuminated-manuscript register, but a name set in
+     it had to be decoded rather than read, and the chapter titles went the same
+     way at any size small enough to fit a phone. Eczar keeps the register
+     (chunky, cut rather than drawn, closer to a woodcut than to a typeface) and
+     has real lowercase, so the copy keeps its own letter case and nothing has
+     to be spelled out in capitals to stay legible. */
+  --display: "Eczar", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --body:    "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
   --mono:    "Space Mono", ui-monospace, "Courier New", monospace;
 
@@ -513,9 +521,9 @@ button { font: inherit; color: inherit; }
 /* ── Name ── */
 .hero__name {
   font-family: var(--display);
-  font-weight: 900;
+  font-weight: 800;   /* Eczar tops out at 800; 900 would be synthesised */
   font-size: var(--t-hero);
-  line-height: .82;
+  line-height: .88;
   letter-spacing: -.015em;
   margin-bottom: 1.1rem;
   text-transform: uppercase;
@@ -1062,7 +1070,8 @@ button { font: inherit; color: inherit; }
   display: block;
   margin-bottom: .35rem;
 }
-.card__src {
+.card__src,
+.trial__link {
   display: inline-block;
   margin-top: 1rem;
   font-family: var(--mono);
@@ -1074,7 +1083,22 @@ button { font: inherit; color: inherit; }
   border-bottom: 1px solid currentColor;
   padding-bottom: 2px;
 }
-.card__src:hover { color: var(--bone); }
+.card__src:hover,
+.trial__link:hover { color: var(--bone); }
+/* The Judgement card carries two repositories, so they sit side by side and
+   wrap to two lines rather than running together into one link. */
+.card__srcs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem 1.1rem;
+}
+/* In the provenance note the link ends a paragraph, so it takes its own line
+   and the rule under it stops hugging the sentence above. */
+.trial__link {
+  display: block;
+  width: fit-content;
+  margin-top: .7rem;
+}
 
 /* scrollbar inside the reading */
 .card__face--back::-webkit-scrollbar { width: 6px; }
@@ -1615,21 +1639,92 @@ button { font: inherit; color: inherit; }
 }
 
 @media (max-width: 780px) {
-  :root { --nav-h: 62px; }
-  .nav { gap: .8rem; }
-  .nav__links { display: none; }
+  /* The nav is two rows here. It used to be one row that simply dropped the
+     chapter links, which left a six-chapter page with no way to move between
+     chapters except scrolling to the very bottom. The strip is that way back.
+     --nav-h tracks the real height so anchor jumps still land below the bar
+     instead of under it. */
+  :root {
+    --nav-h: 106px;
+    --t-micro: .8rem;   /* lifts every label that reads its size from the scale */
+  }
+  .nav {
+    height: auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .45rem;
+    padding-top: .5rem;
+  }
   .nav__name { font-size: 1.25rem; }
-  .nav__cv { padding: .45rem .7rem; font-size: .62rem; letter-spacing: .06em; }
+  .nav__brand, .tog { min-height: 44px; }
+  .tog { width: 44px; height: 44px; }
+  .nav__cv {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: .6rem .8rem;
+    font-size: .68rem;
+    letter-spacing: .06em;
+  }
+
+  /* The chapter strip. It scrolls sideways itself; the page still does not. */
+  .nav__links {
+    order: 3;
+    flex-basis: 100%;
+    display: flex;
+    gap: .1rem;
+    margin-inline: calc(-1 * clamp(1rem, 3vw, 2rem));
+    padding-inline: clamp(1rem, 3vw, 2rem);
+    padding-bottom: .5rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+  .nav__links::-webkit-scrollbar { display: none; }
+  .nav__links a {
+    flex: none;
+    min-height: 44px;
+    align-items: center;
+    scroll-snap-align: center;
+    padding: .5rem .6rem;
+    font-size: .68rem;
+  }
+  /* numerals alone are not something you can navigate by */
+  .nav__links span { display: inline; }
+  .nav__links b { font-size: .95rem; }
+
+  /* The deck goes to one column, and the card sizes to its own content. Held
+     to a fixed tarot ratio, four of the six reading faces were taller than the
+     card and hid their last lines behind a scroll inside a page that already
+     scrolls. Nothing is hidden now; the card is as tall as the reading. */
+  .deck { grid-template-columns: 1fr; }
+  .card { aspect-ratio: auto; }
+  .card__inner { display: grid; height: auto; }
+  .card__face {
+    position: relative;
+    inset: auto;
+    grid-area: 1 / 1;
+    min-height: 440px;
+  }
+  .card__face--back { padding: 1.3rem 1.15rem; overflow: visible; }
+
   .hero { min-height: auto; padding-top: calc(var(--nav-h) + 2.6rem); }
   .hero__name-l2 { text-shadow: 3px 3px 0 var(--ink); }
+  .hero__cta .btn, .rite__cta .btn { min-height: 48px; }
   .plates { grid-template-columns: repeat(2, 1fr); }
-  .deck { grid-template-columns: 1fr; }
-  .card { aspect-ratio: 5 / 7; }
-  .card__face--back { padding: 1.3rem 1.15rem; }
   .tablets { grid-template-columns: 1fr; }
   .rite__circle { opacity: .09; }
   .reveal-egg__box { padding: 2rem 1.3rem 1.8rem; }
+  .btn--sm, .deck__bar .btn { min-height: 44px; }
 }
+
+/* ── the phone type floor ──
+   See the note at the foot of this sheet: the rules live there because of
+   source order, not because they belong to that section. */
+
+
 
 @media (max-width: 520px) {
   /* the role reads as three stacked lines rather than wrapping mid-phrase */
@@ -2522,6 +2617,63 @@ button { font: inherit; color: inherit; }
   .call { flex: 1 1 100%; }
   .repair__steps li { grid-template-columns: 1fr; }
   .repair__steps .repair__r { text-align: left; }
+}
+
+/* ── the phone type floor ──
+   The scale puts its smallest step at --t-micro, but two dozen components
+   hardcode .62 to .74rem and land under it. On a desktop that reads as fine
+   print; on a phone it reads as texture. .78rem is the first step of the scale
+   that clears 12px, so everything carrying meaning comes up to it. .72 and .74
+   were the first attempt and both compute under 12px, which is how that pass
+   read as fixed while still being under the line.
+
+   It lives at the foot of the sheet on purpose: equal specificity is settled
+   by source order, not by media query, so the same rules written up beside the
+   rest of the responsive block lost to the component rules declared after
+   them. That was measured, not assumed: the first attempt changed nothing. */
+@media (max-width: 780px) {
+  /* the card-back chips are named at two-class specificity in the deck, so
+     the plain .chips li selector does not reach them */
+  dt, .card__arcana, .chips li, .card__face--back .chips li, .tag, .rite__k,
+  .plate__l, .tongues__lvl,
+  .call__id, .call__meta, .call__out, .pill, .grounds__fine, .seg__spk,
+  .seg__meta, .is-id, .artefact__nums, .artefact__head, .walker__bubble,
+  .plate__id, .corpus__stats dt, .card__hint, .card__turn-back, .metric__k,
+  .fact__k, .is-flag, .tablet__sub, .bring__drop-s, .deck__count, .card__src,
+  .seg__n, .hero__role, .trial__link, .card__inv b, .grounds__hint,
+  .btn--sm, .deck__bar .btn, .nav__cv,
+  /* these four were still under the line after the first pass, because the
+     sweep that found the rest ran with every card turned, and turning a card
+     marks its front inert: the fronts, and the trial's own source line, were
+     never measured. They are measured now, in both states. */
+  .trial__src b, .grounds__hint .mono, .entry__when time,
+  .seg__meta .is-lang { font-size: .78rem; }
+  .entry__when, .bring__stages li, .verdict__word, .plate__pose, kbd,
+  .metric__v small, .corpus__stats dd small, .grounds__hint kbd { font-size: .82rem; }
+  /* The chapter strip is the only navigation on a phone now, so its own type
+     is not fine print: the names have to be readable at a glance and the
+     numeral is the thing you aim at. */
+  .nav__links a { font-size: .78rem; padding-inline: .7rem; }
+  .nav__links b { font-size: 1.05rem; }
+  /* a link that sits on its own line is not an inline link in a sentence, so
+     it has to be a real target rather than a 24px strip of text */
+  .trial__link, .card__src { padding-block: .85rem; margin-top: .3rem; }
+
+  /* The conversation map is drawn in a 760-unit viewBox, and on a phone the
+     700px floor pins it at a scale of 0.92, so every label in it lands at
+     nine tenths of its declared size: ten units of tick is nine pixels of
+     screen. Thirteen units is what clears twelve pixels at that scale. The
+     lane letter-spacing comes in from .18em to .08em so CALLER still fits the
+     58 units between the map edge and the first bar, and the language ribbon
+     is left where it is because it only draws on bars wider than 22 units,
+     which is more room than a two-letter code needs at this size. */
+  .cmap__svg text, .cmap__svg .cmap__tick, .cmap__svg .cmap__lang { font-size: 13px; }
+  /* CALLER is the widest word in the gutter and it is a fixed string, so the
+     fit is checked rather than assumed: at .18em of tracking it ends four
+     units short of the first bar, which is too close to leave for a fallback
+     face with wider bearings. Mono carries its own sidebearings, so the
+     tracking goes and the margin comes back to ten units. */
+  .cmap__svg .cmap__lane { font-size: 13px; letter-spacing: 0; }
 }
 
 /* ─────────────────── ACCESSIBILITY / MOTION ─────────────────── */

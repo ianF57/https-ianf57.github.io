@@ -172,6 +172,14 @@
       items.forEach(function (el) { el.classList.add('is-in'); });
       return;
     }
+    // The threshold is 0, not a ratio, because a ratio cannot be reached by an
+    // element taller than the viewport: the Trial II article is 7645px on a
+    // phone against a 776px root, so the most of it that can ever be on screen
+    // at once is a tenth, and a 0.12 threshold left the whole chapter at
+    // opacity 0 forever. Waiting for the first pixel is the only rule that
+    // works for every height. The inset below is what keeps the entrance
+    // deliberate: nothing reveals until its top has crossed eight per cent up
+    // from the bottom of the screen.
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (en.isIntersecting) {
@@ -179,7 +187,7 @@
           io.unobserve(en.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
     items.forEach(function (el) { io.observe(el); });
   })();
 
@@ -252,9 +260,28 @@
     var railLinks = $$('.rail a');
     if (!sections.length || !('IntersectionObserver' in window)) return;
 
+    // On a phone the chapter strip is wider than the screen and scrolls
+    // sideways. Whatever chapter you are in has to be the part you can see, or
+    // the strip is a list of links to somewhere else. Scrolled by hand rather
+    // than with scrollIntoView, which would also drag the page along with it.
+    var strip = $('#nav .nav__links');
+    function centreInStrip(a) {
+      if (!strip || strip.scrollWidth <= strip.clientWidth) return;
+      var ar = a.getBoundingClientRect();
+      var sr = strip.getBoundingClientRect();
+      var want = strip.scrollLeft + (ar.left - sr.left) - (sr.width - ar.width) / 2;
+      var max = strip.scrollWidth - strip.clientWidth;
+      want = Math.max(0, Math.min(want, max));
+      if (Math.abs(strip.scrollLeft - want) < 4) return;
+      if (strip.scrollTo) strip.scrollTo({ left: want, behavior: reduced ? 'auto' : 'smooth' });
+      else strip.scrollLeft = want;
+    }
+
     function activate(id) {
       navLinks.forEach(function (a) {
-        a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
+        var on = a.getAttribute('href') === '#' + id;
+        a.classList.toggle('is-active', on);
+        if (on) centreInStrip(a);
       });
       railLinks.forEach(function (a) {
         a.classList.toggle('is-active', a.getAttribute('data-rail') === id);
@@ -330,6 +357,20 @@
         back.setAttribute('aria-label', 'Turn back: ' + label);
         back.addEventListener('click', function () { sound.turn(); setFlipped(card, false); });
       }
+
+      // The card carries a pointer cursor over its whole surface, so the whole
+      // surface has to answer to a click, in both directions. Two things are
+      // not a turn: a real control, because the turn buttons and the source
+      // links do their own job, and a click that ended a text selection,
+      // because dragging across the reading is reading, not turning.
+      card.addEventListener('click', function (e) {
+        var t = e.target;
+        if (t && t.closest && t.closest('a, button, input, label')) return;
+        var sel = window.getSelection && window.getSelection();
+        if (sel && String(sel).length) return;
+        sound.turn();
+        setFlipped(card, !card.classList.contains('is-flipped'));
+      });
 
       applyFaceState(card, false);
     });
@@ -443,7 +484,12 @@
           '<use href="#i-follower"/></svg>';
 
         var dir = Math.random() < 0.5 ? -1 : 1;
-        var size = 34 + Math.random() * 24;
+        // These are real controls, not scenery: role="button" and focusable.
+        // On a phone the smallest one has to still be a 44px target, and the
+        // slot maths below lays them out by size, so the floor belongs here
+        // rather than only in the CSS.
+        var narrow = W < 640;
+        var size = (narrow ? 44 : 34) + Math.random() * (narrow ? 14 : 24);
         el.style.width = size.toFixed(0) + 'px';
         // the flip rides on --flip so the drawing turns but the bubble does not
         el.style.setProperty('--flip', String(dir));

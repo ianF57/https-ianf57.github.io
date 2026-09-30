@@ -15,7 +15,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@300;400;500;600;700;800;900&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Eczar:wght@400;500;600;700;800&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="assets/css/style.css">
 
@@ -682,6 +682,10 @@
             <p class="card__inv"><b>Inverted:</b> a model that is 94% accurate in a notebook and a
               model that is 94% accurate on a grimy photograph of a windscreen VIN plate are not the
               same model. Production is always the second one.</p>
+            <p class="card__srcs">
+              <a class="card__src" href="https://github.com/ianF57/VIN_VLM" target="_blank" rel="noopener">VIN_VLM ↗</a>
+              <a class="card__src" href="https://github.com/ianF57/STT_for_call_analysis" target="_blank" rel="noopener">STT_for_call_analysis ↗</a>
+            </p>
           </div>
         </div>
       </article>
@@ -944,7 +948,8 @@
           real system are not replayed here at all: the deskew, which needs those segmentation
           polygons, and a <b>Vision-Language Model cross-check</b> that resolves the plates the
           classical chain cannot. In production the whole thing is reconciled into a multi-tab
-          Excel export before it reaches the software team.</p>
+          Excel export before it reaches the software team.
+          <a class="trial__link" href="https://github.com/ianF57/VIN_VLM" target="_blank" rel="noopener">Read the source on GitHub ↗</a></p>
         <ul class="chips chips--tight">
           <li>YOLO11-seg</li><li>OpenCV</li><li>PaddleOCR</li><li>Vision-Language Models</li>
         </ul>
@@ -1076,7 +1081,8 @@
           corpus's own recorded ones, carried in each record exactly as the pipeline wrote them,
           which is why the call with no hand-checked reference carries none and reads as not
           scored. The scoring functions behind those numbers are ported to JavaScript further down
-          this trial, and they run there on text you supply.</p>
+          this trial, and they run there on text you supply.
+          <a class="trial__link" href="https://github.com/ianF57/STT_for_call_analysis" target="_blank" rel="noopener">Read the source on GitHub ↗</a></p>
         <ul class="chips chips--tight">
           <li>faster-whisper</li><li>Silero VAD</li><li>ECAPA-TDNN</li><li>GlotLID</li><li>rapidfuzz</li>
           <li>Streamlit</li>

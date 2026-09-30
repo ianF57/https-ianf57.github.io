@@ -34,30 +34,9 @@ python -m http.server 8000     # then visit http://localhost:8000
 | `assets/js/demo-data.js` | Recorded output from the two ML pipelines, as one plain script. |
 | `assets/img/plates/` | Six synthetic number-plate renders used by Trial I. |
 | `assets/Ian_Faasen_CV.pdf` | The C.V. linked from the nav, the hero, and the contact chapter. |
-| `.nojekyll` | Tells GitHub Pages to serve these files as they are, with no Jekyll pass. |
-| `.gitignore` | OS clutter, editor state, archives, and any second copy of the C.V. |
 
-`assets/Ian_Faasen_CV.pdf` is the one copy of the C.V. and the one the site links to.
-Keep it replaced, not added to: a second copy in the repository root would be served
-publicly and would drift out of step with the page, which describes the same experience
-in its own words. `.gitignore` blocks a stray copy by name.
-
-## Hosting
-
-Deployed as a GitHub Pages site with no build step: the branch is the artifact. Pages
-serves `index.html` from the repository root, and `.nojekyll` keeps Jekyll out of the
-way.
-
-**Every path in the site is relative.** That is deliberate, and it is what lets the same
-files work from `file://`, from a root domain, and from a project subpath without a
-single edit. Do not introduce a leading-slash path such as `/assets/css/style.css`: it
-works at a root domain and breaks under a subpath, which is the failure that only shows
-up after deploying.
-
-Two repository names, two different URLs:
-
-- A repository named exactly `<user>.github.io` is served at `https://<user>.github.io/`.
-- Any other name is served at `https://<user>.github.io/<repository>/`.
+The original `Ian_Faasen_CV (1).pdf` is left where it was; `assets/Ian_Faasen_CV.pdf`
+is the copy the site links to.
 
 ## The Trials
 
@@ -83,7 +62,7 @@ mock-up:
   2 s or more cut to a 300 ms gap), draws the real waveform with the cuts marked, and
   scores any transcript you paste against any reference you paste, using the
   project's own tokeniser and edit distance. Verified against the project's functions
-  over 28 cases, including Unicode, CJK and astral characters.
+  over 30 cases, including Unicode, CJK and astral characters.
 
 Silero VAD and Whisper are model weights, not browser APIs, so the recording panel
 uses an energy gate in place of the first and asks you to paste the output of the
@@ -115,10 +94,15 @@ Vermilion (`#D0402C`) is the Red Crown: it marks the thing you should act on and
 nothing else. Gold (`#E3A93C`) is trim. Ritual purple and moss appear only as
 doctrine tints, where they encode which of the four disciplines a skill belongs to.
 
-**Type.** Grenze Gotisch (blackletter) for display, Alegreya Sans for reading,
-Space Mono for numbers, labels, and metadata. The blackletter-versus-monospace
-clash is the point: it is the difference between scripture and telemetry, which is
-what the site is about.
+**Type.** Eczar for display, Alegreya Sans for reading, Space Mono for numbers,
+labels, and metadata. The carved-versus-monospace clash is the point: it is the
+difference between scripture and telemetry, which is what the site is about. The
+display face was a blackletter at first and that was wrong for the one job it has
+to do here, which is be read: a name set in it had to be decoded rather than read,
+and the chapter titles went the same way at any size small enough to fit a phone.
+Eczar keeps the register, cut rather than drawn, closer to a woodcut than to a
+typeface, and it has real lowercase, so nothing has to be spelled out in capitals
+to stay legible.
 
 **Structure.** The page is six chapters (Record, Deck, Doctrines, Faithful, Trials,
 Rite) that read as a progression rather than a list of sections. Chapter numerals are
@@ -131,9 +115,15 @@ plate and text. A crown in the hero tracks your cursor.
 
 ## Interactivity
 
-- **The deck**: turn any card by clicking it or its turn button. Unread cards are
-  counted; shuffle re-deals with a staggered animation; draw-at-random flips a card
-  and moves focus to it.
+- **The deck**: turn any card by clicking it or its turn button. The card carries a
+  pointer cursor over its whole surface, so its whole surface answers to a click, in
+  both directions. Two things are not a turn: a click that lands on a control inside
+  the card, because the turn buttons and the source links do their own job, and a
+  click that merely ended a text selection, because dragging across the reading is
+  reading. Unread cards are counted; shuffle re-deals with a staggered animation;
+  draw-at-random flips a card and moves focus to it.
+- **The source links**: the Judgement card and both Trials link out to the projects
+  on GitHub, so the claim on the card can be checked against the code it came from.
 - **Ritual sound**: off by default. The toggle in the nav unlocks a Web Audio layer
   (knock, turn, chime, hop). Nothing plays until you ask for it.
 - **The faithful**: followers walk the footer. Hover or focus one to make it hop.
@@ -164,6 +154,28 @@ plate and text. A crown in the hero tracks your cursor.
   the project does when a record has no value for it.
 - **A revelation**: there is one. Click the crown five times in quick succession, or
   type `PRAISE` anywhere on the page.
+
+## On a phone
+
+The narrow layout is not a squeezed desktop:
+
+- The chapter list becomes a strip under the brand that you swipe sideways, and the
+  chapter you are reading is scrolled to the middle of it as you go. It was hidden
+  outright below 1080px before, which left a phone with no navigation but the
+  scrollbar.
+- Cards stop being fixed-height rectangles and grow to fit their reading, so no card
+  back is hidden behind an inner scroll.
+- Nothing carrying meaning is set below 12px. The smallest labels come up to .78rem,
+  and the conversation map, which is drawn in a fixed viewBox and would otherwise
+  render at nine tenths of its declared size, declares its labels at 13 units so they
+  land at 12 pixels.
+- Every control is at least a 44px target, including the follower characters, whose
+  minimum size is set in the layout maths rather than only in the stylesheet, because
+  the maths positions them by size.
+- Scroll reveals are triggered by first intersection rather than by a visibility
+  ratio. A ratio cannot be reached by a panel taller than the screen, and the Trial II
+  article is 7645px on a phone against a 776px viewport, so the whole chapter sat at
+  opacity 0 and never appeared.
 
 ## Accessibility
 
